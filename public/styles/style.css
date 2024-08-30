@@ -1,0 +1,211 @@
+@import url("/fonts/mabry/stylesheet.css");
+
+@font-face {
+    font-family: 'Mabry Pro';
+    src: url('MabryPro-Regular.eot');
+    src: local('Mabry Pro'), local('MabryPro-Regular'),
+        url('MabryPro-Regular.eot?#iefix') format('embedded-opentype'),
+        url('MabryPro-Regular.woff2') format('woff2'),
+        url('MabryPro-Regular.woff') format('woff'),
+        url('MabryPro-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+}
+
+
+.title {
+    font-family: 'Mabry Pro';
+    src: url('MabryPro-Bold.eot');
+    src: local('Mabry Pro Bold'), local('MabryPro-Bold'),
+        url('MabryPro-Bold.eot?#iefix') format('embedded-opentype'),
+        url('MabryPro-Bold.woff2') format('woff2'),
+        url('MabryPro-Bold.woff') format('woff'),
+        url('MabryPro-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+    font-size: 10em;
+
+
+    font-weight: bold;
+    background: linear-gradient(to right, #ffffff, #ff99cc, #ff66b2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+
+
+html,
+body {
+    height: 100%;
+}
+
+.background-vid {
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+    max-height: 100%;
+}
+
+.background-color {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.title-page {
+    position: relative;
+    position: absolute;
+    top: 60%;
+    opacity: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    /* Apply animation */
+}
+
+
+.sub-title {
+    /* centering the text  */
+    display: flex;
+    justify-content: center;
+
+    /* //adding the font family  */
+    font-size: 1.5em;
+    font-family: 'Mabry Pro';
+    src: url('MabryPro-Light.eot');
+    src: local('Mabry Pro Light'), local('MabryPro-Light'),
+        url('MabryPro-Light.eot?#iefix') format('embedded-opentype'),
+        url('MabryPro-Light.woff2') format('woff2'),
+        url('MabryPro-Light.woff') format('woff'),
+        url('MabryPro-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+
+    color: white;
+    /* Apply animation */
+}
+
+.second-page {
+    background-color: black;
+}
+
+.second-title {
+    font-family: 'Mabry Pro';
+    src: url('MabryPro-Bold.eot');
+    src: local('Mabry Pro Bold'), local('MabryPro-Bold'),
+        url('MabryPro-Bold.eot?#iefix') format('embedded-opentype'),
+        url('MabryPro-Bold.woff2') format('woff2'),
+        url('MabryPro-Bold.woff') format('woff'),
+        url('MabryPro-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+    font-size: 10em;
+
+
+    font-weight: bold;
+    background: linear-gradient(to bottom, #ffffff, #ff99cc, #ff66b2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+
+    text-align: center;
+}
+
+.second-subtitle {
+    font-family: 'Mabry Pro';
+    src: url('MabryPro-Regular.eot');
+    src: local('Mabry Pro'), local('MabryPro-Regular'),
+        url('MabryPro-Regular.eot?#iefix') format('embedded-opentype'),
+        url('MabryPro-Regular.woff2') format('woff2'),
+        url('MabryPro-Regular.woff') format('woff'),
+        url('MabryPro-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+
+    color: white;
+    text-align: center;
+
+    padding: 0 2em;
+}
+
+.btn {
+    width: 100%;
+    display: flex;
+
+}
+
+button {
+    /* basic style to give button a squricle look  */
+    border: none;
+    padding: 1em 3em;
+    border-radius: 20px;
+    font-family: Mabry Pro;
+    margin: 3em auto;
+    text-align: center;
+
+    /* giving relative position to the button so that we can give absolute position to the after pseudo element.  */
+    position: relative;
+    
+    /* giving it z-index because we want it to set in the background  */
+    z-index: 0;
+
+    /* transition on color because the color of the text is changing  */
+    transition: color 500ms;
+
+    /* hiding overflow because if not done the animation goes out of the button whilst closing.  */
+    overflow: hidden;
+    cursor: pointer;
+}
+
+button::after {
+    content: "";
+
+    /* giving absolute position to make it stay above the stack.  */
+    position: absolute;
+    background: linear-gradient(to right top, #ff00c8, #ff4cd7, #ff6ee5, #ff8af1, #ffa3fb);
+
+    /* width set to zero so that the effect is hidden at first  */
+   width: 0px;
+
+   /* make sure to give it height and positions or else it wont we visible.  */
+   height: 100%;
+   top: 0;
+   left: 0;
+   border-radius: 20px 0 0 20px; 
+
+   /* adding transition to width and border-radius because width and border radius is being altered in hover psuedo class  */
+   transition: width 500ms ease-in-out, border-radius 500ms ease-in-out;
+
+   /* zindex to make it stay behind the original button.  */
+   z-index: -1;
+}
+
+/* giving width 100%  to make it visible when the button is hovered and making border radius 20px because it looks like square. while the animation is happening.  */
+button:hover::after {
+width: 100%;
+border-radius: 20px;
+}
+
+/* makling the color of the text white when we hover, we previously also added transition for this so as to make this effect smooth whenever this happens  */
+button:hover {
+    color: white;
+} 
