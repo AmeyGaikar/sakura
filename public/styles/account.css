@@ -1,0 +1,143 @@
+@import url("/fonts/mabry/stylesheet.css");
+
+@font-face {
+    font-family: 'Mabry Pro';
+    src: url('MabryPro-Regular.eot');
+    src: local('Mabry Pro'), local('MabryPro-Regular'),
+        url('MabryPro-Regular.eot?#iefix') format('embedded-opentype'),
+        url('MabryPro-Regular.woff2') format('woff2'),
+        url('MabryPro-Regular.woff') format('woff'),
+        url('MabryPro-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+* {
+    font-family: Mabry Pro;
+}
+
+/* account form  */
+html,
+body {
+    height: 100%;
+    box-sizing: border-box;
+    background-color: black;
+
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.form-model {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 450px;
+    justify-content: center;
+    padding: 1rem;
+    margin-bottom: 20px;
+    /* background: linear-gradient(to right top, #ff00c8, #ff4cd7, #ff6ee5, #ff8af1, #ffa3fb); */
+    
+    border-radius: 20px;
+    box-shadow: 0px 0px 40px rgba(155, 155, 155, 0.2);
+}
+
+
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    align-items: center;
+
+}
+
+.login-form input {
+    border: none;
+    outline: none;
+    /* background-color: black;
+    color: white; */
+    width: 50%;
+    background-color: #EBEBEB;
+    padding: 1em;
+    border-radius: 20px;
+}
+
+::placeholder {
+    color: black;
+}
+
+.login-title {
+    margin: 0;
+}
+
+.login-title, .login-subtitle {
+color: white;
+text-align: center;
+}
+
+.login-form a {
+    transition: color 400ms ease-in-out;
+    text-decoration: none;
+}
+.login-form a:link {
+    color: pink;
+    
+}
+
+.login-form a:visited {
+    color: pink;
+
+}
+
+.login-form a:hover {
+    color: white
+}
+
+.login-form input:focus {
+    border: none;
+
+}
+
+.submit-button {
+    width: 30%;
+    margin:2em auto;
+}
+
+button {
+    padding: 1em 3em;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    z-index: 0;
+    position: relative;
+    overflow: hidden;
+    transition: color 500ms ease;
+}
+
+button::after {
+    content: "";
+    position: absolute;
+    background: linear-gradient(to right top, #ff00c8, #ff4cd7, #ff6ee5, #ff8af1, #ffa3fb);
+    height: 100%;
+    width: 0px;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    border-radius: 20px;
+    transition: width 500ms ease-in-out, border-radius 500ms ease-in-out;
+}
+
+button:hover::after {
+    width: 100%;
+    border-radius: 20px;
+}
+
+button:hover {
+    color: white;
+}
