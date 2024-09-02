@@ -9,12 +9,12 @@
 </head>
 
 <body>
-    <div class="form-model">
 
+    <div class="form-model">
 
         <form class="login-form" method="post" action="/submitKitsu">
             <h1 class="login-title">Login with kitsu</h1>
-            <p class="login-subtitle">To use our services you need to have a kitsu account get youself one from <a
+            <p class="login-subtitle">To use our services you need to have a kitsu account get yourself one from <a
                     href="https://kitsu.app/explore/anime">here</a></p>
             <input type="email" id="mail" name="mail" id="e-id" placeholder="Email">
             <input type="password" id="pswd" name="password" id="pass" placeholder="Password">
@@ -24,8 +24,24 @@
 
     </div>
 
+<div class="blur-bg"></div>
 
+    <div class="token-check">
+        <div class="card">
 
+            <% if (locals.token) { %>
+                <h1>Login Successful!</h1>
+                <p>click below to start having fun!</p>
+                <button id="sucess-ver" onclick="window.location.href='/homepage'"> click me! </button>
+
+                <% } else { %>
+                    <h1>Login Unsuccessful!</h1>
+                    <p>Uh-oh it appears you have entered wrong username/email or passoword, please try again! </p>
+                    <button id="unsucess-ver" onclick="window.location.href='/getStarted'"> click me! </button>
+
+                    <% } %>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="script/index.js"></script>
