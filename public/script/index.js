@@ -12,15 +12,5 @@ $(document).ready(
 
         //hiding and unhiding the login sucessfull and unsucessful tags.
 
-        $(".submit-button").click(
-            function () {
-                $(".token-check").css("visibility", "visible");
-                $(".blur-bg").css("visibility", "visible");
-            }
-        )
-    }
-
-    //account page
-
-);
+    });
 

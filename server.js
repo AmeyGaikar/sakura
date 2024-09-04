@@ -29,9 +29,9 @@ app.post("/submitKitsu", async (req, res) => {
             username: userEmail,
             password: userPassword
         })
-        console.log(response.data.access_token);
+        // console.log(response.data.access_token);
 
-        res.render("account.ejs", { token: response.data });
+        res.render("account.ejs", { token: response.data.access_token });
     } catch (error) {
         console.error(error.message);
         res.render("account.ejs", { token: null });

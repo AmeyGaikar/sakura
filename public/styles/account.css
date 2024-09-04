@@ -152,7 +152,7 @@ button:hover {
     width: 17em;
     position: absolute;
     z-index: 2;
-    visibility: hidden;
+    display: none;
 }
 
 .blur-bg {
@@ -162,7 +162,7 @@ button:hover {
     z-index: 1;
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
-    visibility: hidden;
+    display: none;
 }
 
 .card {
