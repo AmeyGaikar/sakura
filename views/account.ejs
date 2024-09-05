@@ -10,73 +10,41 @@
 
 <body>
 
-    <div class="form-model">
-
+    <div class="form-model" >
         <form class="login-form" method="post" action="/submitKitsu">
             <h1 class="login-title">Login with kitsu</h1>
-            <p> <%= locals.toke %> </p>
-            <p class="login-subtitle">To use our services you need to have a kitsu account get yourself one from <a
-                    href="https://kitsu.app/explore/anime">here</a></p>
-            <input type="email" id="mail" name="mail"  placeholder="Email">
+            <p><%= locals.token %></p>
+            <p class="login-subtitle">To use our services you need to have a kitsu account get yourself one from <a href="https://kitsu.app/explore/anime">here</a></p>
+            <input type="email" id="mail" name="mail" placeholder="Email">
             <input type="password" id="pswd" name="password" placeholder="Password">
-            <button class="submit-button" type="submit">submit</button>
-
+            <button class="submit-button" type="submit">Submit</button>
         </form>
-
     </div>
 
-<div class="blur-bg"></div>
+    <div class="blur-bg" <% if (!locals.token && !locals.error) { %> style="visibility:hidden;" <% } %> ></div>
 
-    <div class="token-check" style="display: none;">
+    <div class="locals.token-check" <% if (!locals.token && !locals.error) { %> style="visibility:hidden;" <% } %> >
         <div class="card">
-
-            
             <% if (locals.token) { %>
-                <% console.log(locals.token);%>
-                <h1>Login Successful!</h1>
-                <p>click below to start having fun!</p>
-                <button id="sucess-ver" onclick="window.location.href='/homepage'"> click me! </button>
-
-                <% } else { %>
-                    <% console.log(locals.token);%>
+                <div class="successful-login">
+                    <h1>Login Successful!</h1>
+                    <p>Click below to start having fun!</p>
+                    <button id="success-ver" onclick="window.location.href='/homepage'">Click me!</button>
+                </div>
+            <% } else if (locals.error) { %>
+                <div class="unsuccessfull-login">
                     <h1>Login Unsuccessful!</h1>
-                    <p>Uh-oh it appears you have entered wrong username/email or passoword, please try again! </p>
-                    <button id="unsucess-ver" onclick="window.location.href='/getStarted'"> click me! </button>
-
-                    <% } %>
+                    <p>Uh-oh, it appears you have entered the wrong username/email or password. Please try again!</p>
+                    <button id="unsuccess-ver" onclick="window.location.href='/getStarted'">Click me!</button>
+                </div>
+            <% } %>
         </div>
     </div>
 
-
-
-
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="script/index.js"></script>
     <script>
-
-
-
-
-        // Taking the value of the script and putting it in the variable to delay the action of the form submission so that there is enough time for the axios to hit the url and get the data.
-               var token = "<%= locals.token %>";
-               console.log("console value", token);
-               $(".submit-button").click(function (e) {
-            e.preventDefault();
-
-            setTimeout(function () {
-                $(".login-form").submit();
-            }, 4000);
-        });
-
-                    // Check token value
-                    if (token) {
-                console.log("Login successful");
-            } else {
-                console.log("Login unsuccessful, no token received.");
-            }
+        // No need for additional JavaScript here, everything is handled server-side.
     </script>
 </body>
-
 </html>

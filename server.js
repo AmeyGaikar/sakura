@@ -23,20 +23,22 @@ app.get("/getStarted", (req, res) => {
 app.post("/submitKitsu", async (req, res) => {
     const userPassword = req.body.password;
     const userEmail = req.body.mail;
+
     try {
         const response = await axios.post(tokenAccessURL, {
             grant_type: 'password',
             username: userEmail,
             password: userPassword
-        })
-        // console.log(response.data.access_token);
+        });
 
-        res.render("account.ejs", { token: response.data.access_token });
+        // Token received, render page with token
+        res.render("account.ejs", { token: response.data.access_token, error: null });
+
     } catch (error) {
-        console.error(error.message);
-        res.render("account.ejs", { token: null });
+        // No token, render page with error
+        res.render("account.ejs", { token: null, error: true });
     }
-})
+});
 
 
 app.listen(port, () => {
