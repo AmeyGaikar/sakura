@@ -1,10 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
 import axios from "axios";
+import { render } from "ejs";
 
 
 
 const tokenAccessURL = "https://kitsu.io/api/oauth/token";
+const allAnime = "https://kitsu.io/api/edge/anime"
 const port = 3000;
 const app = express();
 
@@ -21,25 +23,35 @@ app.get("/getStarted", (req, res) => {
 })
 
 app.post("/submitKitsu", async (req, res) => {
-    const userPassword = req.body.password;
-    const userEmail = req.body.mail;
-
+    const email = req.body.mail;
+    const password = req.body.password;
     try {
+
+
         const response = await axios.post(tokenAccessURL, {
-            grant_type: 'password',
-            username: userEmail,
-            password: userPassword
+            grant_type: "password",
+            username: email,
+            password: password
         });
 
-        // Token received, render page with token
-        res.render("account.ejs", { token: response.data.access_token, error: null });
-
+        res.render("account.ejs", { token: response.data.access_token, error: false });
+        console.log(response);
     } catch (error) {
-        // No token, render page with error
-        res.render("account.ejs", { token: null, error: true });
+        console.error(error.response.data.error_description);
+        res.render("account.ejs", { token: false, error: true });
     }
-});
+})
 
+
+app.get("/homepage", async (req, res) => {
+    try {
+        const response = await axios.get(allAnime);
+        console.log(response.data.links.first);
+    } catch (error) {
+        console.error(error.response);
+    }
+    res.render("homepage.ejs");
+})
 
 app.listen(port, () => {
     console.log(`listening on http://localhost:${port}`);

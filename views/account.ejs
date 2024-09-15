@@ -13,9 +13,6 @@
     <div class="form-model">
         <form class="login-form" method="post" action="/submitKitsu">
             <h1 class="login-title">Login with kitsu</h1>
-            <p>
-                <%= locals.token %>
-            </p>
             <p class="login-subtitle">To use our services you need to have a kitsu account get yourself one from <a
                     href="https://kitsu.app/explore/anime">here</a></p>
             <input type="email" id="mail" name="mail" placeholder="Email">
@@ -34,14 +31,16 @@
                     <p>Click below to start having fun!</p>
                     <button id="success-ver" onclick="window.location.href='/homepage'">Click me!</button>
                 </div>
-                <% } else if (locals.error) { %>
+                <% } else if (locals.token===false){ %>
                     <div class="unsuccessfull-login">
                         <h1>Login Unsuccessful!</h1>
-                        <p>Uh-oh, it appears you have entered the wrong username/email or password. Please try again!
+                        <p>Uh-oh, it appears you have entered the wrong username/email or password. Please try
+                            again!
                         </p>
                         <button id="unsuccess-ver" onclick="window.location.href='/getStarted'">Click me!</button>
                     </div>
                     <% } %>
+
         </div>
     </div>
 
@@ -52,11 +51,14 @@
         var token = "<%= locals.token %>";
         var error = "<%= locals.error %>";
 
+
         if (!token && !error) {
             jQuery(".token-check").hide();
             jQuery(".blur-bg").hide();
-        } 
-f
+        }
+
+
+
     </script>
 </body>
 

@@ -1,0 +1,55 @@
+@import url("../fonts/mabry/stylesheet.css");
+
+@font-face {
+    font-family: 'Mabry Pro';
+    src: url('MabryPro-Regular.eot');
+    src: local('Mabry Pro'), local('MabryPro-Regular'),
+        url('MabryPro-Regular.eot?#iefix') format('embedded-opentype'),
+        url('MabryPro-Regular.woff2') format('woff2'),
+        url('MabryPro-Regular.woff') format('woff'),
+        url('MabryPro-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    background-color: black;
+}
+
+* {
+    font-family: Mabry Pro;
+    color: white;
+}
+
+.titles {
+    text-align: center;
+}
+
+.titles h1 {
+    display: inline-block;
+    margin: 1em 1em;
+    cursor: pointer;
+}
+
+.anime-poster {
+    width: 100%;
+    height: auto;
+}
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, auto));
+    gap: 1em;
+    margin: auto;
+    padding: 0 1.3em;
+    
+}
+
+.anime-post {
+    cursor: pointer;
+}
+
