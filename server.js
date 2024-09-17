@@ -4,13 +4,12 @@ import axios, { all } from "axios";
 import { render } from "ejs";
 
 
-const homePageAnime = "https://kitsu.io/api/edge/anime?page[limit]=13&page[offset]=0"
+const homePageAnime = "https://kitsu.io/api/edge/anime?page%5Blimit%5D=13&page%5Boffset%5D=0"
 const tokenAccessURL = "https://kitsu.io/api/oauth/token";
 let allAnime = "https://kitsu.io/api/edge/anime?page[limit]=13&page[offset]=0"
 const port = 3000;
 const app = express();
-let userEmail;
-let userPassword;
+
 let nextLink;
 let prevLink;
 let lastLink;
@@ -53,7 +52,7 @@ app.get("/homepage", async (req, res) => {
         const response = await axios.get(homePageAnime);
         // console.log(response);
 
-        res.render("homepage.ejs", { animeData: response.data.data });
+        res.render("homepage.ejs", { animeData: response.data.data, homePageCheck: "on-homepage"});
     } catch (error) {
         console.error(error.response);
     }
@@ -71,7 +70,6 @@ app.get("/next", async (req, res) => {
 
         const response = await axios.get(nextLink);
         allAnime = nextLink;
-        console.log(allAnime);
         res.render("homepage.ejs", { animeData: response.data.data });
         
 
@@ -81,15 +79,20 @@ app.get("/next", async (req, res) => {
 })
 
 app.get("/prev", async (req, res) => {
-
     try {
         const currentPage = await axios.get(allAnime);
         prevLink = currentPage.data.links.prev;
 
+        console.log(prevLink);
+
+        let btnChk = String(homePageAnime) === String(prevLink) ? "hide" : "unhide";
+
         const response = await axios.get(prevLink);
         allAnime = prevLink;
-        console.log(allAnime);
-        res.render("homepage.ejs", { animeData: response.data.data });
+        
+
+
+        res.render("homepage.ejs", { animeData: response.data.data, buttonCheck: btnChk });
         
 
     } catch (error) {
@@ -105,7 +108,7 @@ app.get("/last", async (req, res) => {
 
         const response = await axios.get(lastLink);
         allAnime = lastLink;
-        console.log(allAnime);
+        
         res.render("homepage.ejs", { animeData: response.data.data });
         
 

@@ -13,30 +13,56 @@
         <h1>Anime</h1>
         <h1>Manga</h1>
     </div>
- 
+
     <hr>
 
+ <%# getting anime data from the server in a json format, which we loop over using for loop and %>
     <h1 class="category-title">Multiple Anime's to start your Journey!! </h1>
     <div class="grid-layout">
-        <% locals.animeData.forEach(anime => { %>
-         <div class="anime-post">
-            <img class="anime-img" src="<%= anime.attributes.posterImage.small %>" alt="<%= anime.attributes.slug + "image" %>">
-            <p> <%= anime.attributes.canonicalTitle %> </p>
-            <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %></p>
-            <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %></p>
-         </div>
-        <% }) %>
-        
-        
+        <% locals.animeData.forEach(anime=> { %>
+            <div class="anime-post">
+                <img class="anime-img" src="<%= anime.attributes.posterImage.small %>"
+                    alt="<%= anime.attributes.slug + " image" %>">
+                <p>
+                    <%= anime.attributes.canonicalTitle %>
+                </p>
+                <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
+                </p>
+                <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
+                </p>
+            </div>
+            <% }) %>
+
+
     </div>
 
-<div class="page-no">
-    <button onclick='window.location.href="/homepage"'>Home</button>
-    <button onclick='window.location.href="/prev"'>Prev</button>
-    <button onclick="window.location.href='/next'">Next</button>
-    <button onclick="window.location.href='/last'">Last</button>
-</div>
+    <div class="page-no">
+        <button class="home-button" onclick='window.location.href="/homepage"'>Home</button>
+        <button class="prev-button" onclick='window.location.href="/prev"'>Prev</button>
+        <button class="next-button" onclick="window.location.href='/next'">Next</button>
+        <button onclick="window.location.href='/last'">Last</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+        var homePage = "<%= locals.homePageCheck %>";
+        var buttonCheck = "<%= locals.buttonCheck %>";
+
+        console.log(buttonCheck);
+        if ((homePage === "on-homepage") || buttonCheck === "hide") {
+            jQuery(".home-button").hide();
+            jQuery(".prev-button").hide();
+        }
+        jQuery(".next-button").click(function () {
+            setTimeout(() => {
+                jQuery(".home-button").fadeIn();
+                jQuery(".prev-button").fadeIn();
+            }, 3000);
+
+        })
+    </script>
 </body>
 
 </html>
-
