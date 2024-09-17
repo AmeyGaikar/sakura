@@ -13,72 +13,30 @@
         <h1>Anime</h1>
         <h1>Manga</h1>
     </div>
+ 
+    <hr>
 
+    <h1 class="category-title">Multiple Anime's to start your Journey!! </h1>
     <div class="grid-layout">
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-        
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-        
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-        <div class="anime-post">
-            <img src="images/large.jpg" alt="Anime-Image" class="anime-poster">
-            <p>Title of Anime</p>
-            <p>Rating</p>
-        </div>
-        
+        <% locals.animeData.forEach(anime => { %>
+         <div class="anime-post">
+            <img class="anime-img" src="<%= anime.attributes.posterImage.small %>" alt="<%= anime.attributes.slug + "image" %>">
+            <p> <%= anime.attributes.canonicalTitle %> </p>
+            <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %></p>
+            <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %></p>
+         </div>
+        <% }) %>
         
         
     </div>
+
+<div class="page-no">
+    <button onclick='window.location.href="/homepage"'>Home</button>
+    <button onclick='window.location.href="/prev"'>Prev</button>
+    <button onclick="window.location.href='/next'">Next</button>
+    <button onclick="window.location.href='/last'">Last</button>
+</div>
 </body>
 
 </html>
+

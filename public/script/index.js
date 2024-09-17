@@ -9,8 +9,6 @@ $(document).ready(
             opacity: 1
         }, 2000, 'easeInOutQuad')
 
-
-        //hiding and unhiding the login sucessfull and unsucessful tags.
-
+        
     });
 

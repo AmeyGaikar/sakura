@@ -20,6 +20,10 @@ body {
     background-color: black;
 }
 
+hr {
+    margin-bottom: 20px;
+}
+
 * {
     font-family: Mabry Pro;
     color: white;
@@ -44,12 +48,56 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, auto));
     gap: 1em;
-    margin: auto;
-    padding: 0 1.3em;
-    
+    justify-content: center;
 }
 
 .anime-post {
     cursor: pointer;
 }
 
+.category-title {
+    text-align: center;
+}
+
+.anime-img {
+    border-radius: 25px;
+}
+.page-no {
+    display: flex;
+    justify-content: center;
+    column-gap: 1em;
+}
+
+button {
+    border-radius: 20px;
+    border: none;
+    color: black;
+    padding:1em 3em;
+   cursor: pointer;
+   position: relative;
+   z-index: 0;
+   overflow: hidden;
+transition: color 100ms ease;
+}
+
+button::after {
+content: " ";
+background: linear-gradient(to right top, #ff00c8, #ff4cd7, #ff6ee5, #ff8af1, #ffa3fb);
+position: absolute;
+height: 100%;
+width: 0px;
+top:0;
+left: 0;
+border-radius: 20px;
+z-index: -1;
+transition: width 500ms ease-in-out, border-radius 500ms ease-in-out;
+}
+
+button:hover::after {
+    width: 100%;
+    border-radius: 20px;
+}
+
+button:hover {
+    color: white;
+}

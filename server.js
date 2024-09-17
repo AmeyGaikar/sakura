@@ -1,18 +1,19 @@
 import express from "express";
 import bodyParser from "body-parser";
-import axios from "axios";
+import axios, { all } from "axios";
 import { render } from "ejs";
 
 
-
+const homePageAnime = "https://kitsu.io/api/edge/anime?page[limit]=13&page[offset]=0"
 const tokenAccessURL = "https://kitsu.io/api/oauth/token";
-const allAnime = "https://kitsu.io/api/edge/anime"
+let allAnime = "https://kitsu.io/api/edge/anime?page[limit]=13&page[offset]=0"
 const port = 3000;
 const app = express();
 let userEmail;
 let userPassword;
-let token;
-
+let nextLink;
+let prevLink;
+let lastLink;
 app.use(express.static("./public"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -47,18 +48,72 @@ app.post("/submitKitsu", async (req, res) => {
 })
 
 app.get("/homepage", async (req, res) => {
-    if ((userEmail && userPassword) || token) {
-        try {
-            const response = await axios.get(allAnime);
-            console.log(response.data.links.first);
-        } catch (error) {
-            console.error(error.response);
-        }
-        res.render("homepage.ejs");
-    } else {
-        res.send("<p>you're trying to access the homepage without logging in through kitsu, login using kitsu first.</p>");
+    // if ((userEmail && userPassword) || token) {
+    try {
+        const response = await axios.get(homePageAnime);
+        // console.log(response);
+
+        res.render("homepage.ejs", { animeData: response.data.data });
+    } catch (error) {
+        console.error(error.response);
+    }
+
+    // } else {
+    //     res.send("<p>you're trying to access the homepage without logging in through kitsu, login using kitsu first.</p>");
+    // }
+})
+
+app.get("/next", async (req, res) => {
+
+    try {
+        const currentPage = await axios.get(allAnime);
+        nextLink = currentPage.data.links.next;
+
+        const response = await axios.get(nextLink);
+        allAnime = nextLink;
+        console.log(allAnime);
+        res.render("homepage.ejs", { animeData: response.data.data });
+        
+
+    } catch (error) {
+        console.error(error.response);
     }
 })
+
+app.get("/prev", async (req, res) => {
+
+    try {
+        const currentPage = await axios.get(allAnime);
+        prevLink = currentPage.data.links.prev;
+
+        const response = await axios.get(prevLink);
+        allAnime = prevLink;
+        console.log(allAnime);
+        res.render("homepage.ejs", { animeData: response.data.data });
+        
+
+    } catch (error) {
+        console.error(error.response);
+    }
+})
+
+app.get("/last", async (req, res) => {
+
+    try {
+        const currentPage = await axios.get(allAnime);
+        lastLink = currentPage.data.links.last;
+
+        const response = await axios.get(lastLink);
+        allAnime = lastLink;
+        console.log(allAnime);
+        res.render("homepage.ejs", { animeData: response.data.data });
+        
+
+    } catch (error) {
+        console.error(error.response);
+    }
+})
+
 
 app.listen(port, () => {
     console.log(`listening on http://localhost:${port}`);
