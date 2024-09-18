@@ -62,6 +62,11 @@ hr {
 .anime-img {
     border-radius: 25px;
 }
+
+.grid-layout p {
+    text-align: center;
+}
+
 .page-no {
     display: flex;
     justify-content: center;

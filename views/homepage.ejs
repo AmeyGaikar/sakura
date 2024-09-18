@@ -16,7 +16,7 @@
 
     <hr>
 
- <%# getting anime data from the server in a json format, which we loop over using for loop and %>
+ <%# getting anime data from the server in a json format, which we loop over using foreach loop and  %>
     <h1 class="category-title">Multiple Anime's to start your Journey!! </h1>
     <div class="grid-layout">
         <% locals.animeData.forEach(anime=> { %>
@@ -26,6 +26,8 @@
                 <p>
                     <%= anime.attributes.canonicalTitle %>
                 </p>
+
+                <%# the rating are in out-of-100 based format we first convert to out-of-10 rating based format and then we convert it to out-of-5 rating based format. %>
                 <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
                 </p>
                 <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
@@ -37,24 +39,72 @@
     </div>
 
     <div class="page-no">
-        <button class="home-button" onclick='window.location.href="/homepage"'>Home</button>
+        <button  class="home-button" onclick='window.location.href="/homepage"'>Home</button>
         <button class="prev-button" onclick='window.location.href="/prev"'>Prev</button>
-        <button class="next-button" onclick="window.location.href='/next'">Next</button>
+        <button name="hm-anime-next" class="next-button" onclick="window.location.href='/next'">Next</button>
         <button onclick="window.location.href='/last'">Last</button>
     </div>
+<hr>
+    <div class="trendingAnime">
+        <h1 class="category-title">Embark on your Joureny with titles loved by millions!</h1>
+
+        <div class="grid-layout">
+            <% locals.trendingAnime.forEach(anime=> { %>
+                <div class="anime-post">
+                    <img class="anime-img" src="<%= anime.attributes.posterImage.small %>"
+                        alt="<%= anime.attributes.slug + " image" %>">
+                    <p class="anime-title">
+                        <%= anime.attributes.canonicalTitle %>
+                    </p>
+    
+                    <%# the rating are in out-of-100 based format we first convert to out-of-10 rating based format and then we convert it to out-of-5 rating based format. %>
+                    <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
+                    </p>
+                    <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
+                    </p>
+                </div>
+                <% }) %>
+        </div>
+
+        <div class="page-no">
+            <button  class="home-button" onclick='window.location.href="/homepage"'>Home</button>
+            <button class="prev-button" onclick='window.location.href="/prev"'>Prev</button>
+            <button name="hm-anime-next" class="next-button" onclick="window.location.href='/next?page=2'">Next</button>
+            <button onclick="window.location.href='/last'">Last</button>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
     <script>
-        var homePage = "<%= locals.homePageCheck %>";
-        var buttonCheck = "<%= locals.buttonCheck %>";
 
-        console.log(buttonCheck);
-        if ((homePage === "on-homepage") || buttonCheck === "hide") {
+        //creating variables for checking if we are on homepage & if clicking previous button throws us at homepage?
+        var homePage = "<%= locals.homePageCheck %>";
+        var isPrevBtnHomebtn = "<%= locals.isPrevHome %>";
+
+        //implementing logic that if we are on homepage or if previous button redirects us to homepage then hide the home and prev button.
+        if ((homePage === "on-homepage") || isPrevBtnHomebtn === "hide") {
             jQuery(".home-button").hide();
             jQuery(".prev-button").hide();
         }
+        //unhiding the home and the prev button if we are not on the homepage.
         jQuery(".next-button").click(function () {
             setTimeout(() => {
                 jQuery(".home-button").fadeIn();

@@ -25,12 +25,15 @@
 
     <div class="token-check">
         <div class="card">
+
+            <%# if token is received then sucessful login should be visible. %>
             <% if (locals.token) { %>
                 <div class="successful-login">
                     <h1>Login Successful!</h1>
                     <p>Click below to start having fun!</p>
                     <button id="success-ver" onclick="window.location.href='/homepage'">Click me!</button>
                 </div>
+                <%# else if token has the valueof false than show this. %>
                 <% } else if (locals.token===false){ %>
                     <div class="unsuccessfull-login">
                         <h1>Login Unsuccessful!</h1>
@@ -47,11 +50,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script>
-
+//taking out the value of token and error sent over from the server and putting it in a variable.
         var token = "<%= locals.token %>";
         var error = "<%= locals.error %>";
 
-
+//this states that if token exists than dont hide the token-check and blur-bg and we also implemented the logic of what should be the output if token or error object exists.
         if (!token && !error) {
             jQuery(".token-check").hide();
             jQuery(".blur-bg").hide();
