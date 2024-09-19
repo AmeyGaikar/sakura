@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import axios from "axios";
+import axios, { all } from "axios";
 
 
 const homePageAnime = "https://kitsu.io/api/edge/anime?page%5Blimit%5D=18&page%5Boffset%5D=0";
@@ -15,6 +15,7 @@ let trendingResponse;
 let token;
 let userEmail;
 let userPassword;
+let firstLink;
 let nextLink;
 let prevLink;
 let lastLink;
@@ -74,13 +75,47 @@ app.get("/homepage", async (req, res) => {
     } catch (error) {
         console.error(error.response);
     }
-
+ 
     // } else {
     //     res.send("<p>you're trying to access the homepage without logging in through kitsu, login using kitsu first.</p>");
     // }
 })
 
+app.get("/first", async (req, res) => {
+    try {
+        let trendingResponse, animeResponse;
 
+        if (req.query.pgtype == 'trending') {
+            const curretPage = await axios.get(trendingAnime);
+            trfirstLink = curretPage.data.links.first;
+
+            trendingResponse = await axios.get(trfirstLink);
+            trendingAnime = trfirstLink;
+        } else {
+            const currentPage = await axios.get(allAnime);
+
+            firstLink = currentPage.data.links.first;
+            animeResponse = await axios.get(firstLink);
+
+            allAnime = firstLink;
+        }
+
+        if (!trendingResponse) {
+            trendingResponse = await axios.get(trendingAnime);
+        }
+
+        if (!animeResponse) {
+            animeResponse = await axios.get(allAnime);
+        }
+
+        res.render("homepage.ejs", {
+            animeData: animeResponse.data.data,
+            trendingAnime: trendingResponse.data.data
+        })
+    } catch (error) {
+        console.error(error.response);
+    }
+})
 //when user clicks on the next button this route is triggered.
 app.get("/next", async (req, res) => {
 
