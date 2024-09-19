@@ -100,18 +100,18 @@
         var isPrevBtnHomebtn = "<%= locals.isPrevHome %>";
 
         //implementing logic that if we are on homepage or if previous button redirects us to homepage then hide the home and prev button.
-        if ((homePage === "on-homepage") || isPrevBtnHomebtn === "hide") {
-            jQuery(".home-button").hide();
-            jQuery(".prev-button").hide();
-        }
-        //unhiding the home and the prev button if we are not on the homepage.
-        jQuery(".next-button").click(function () {
-            setTimeout(() => {
-                jQuery(".home-button").fadeIn();
-                jQuery(".prev-button").fadeIn();
-            }, 3000);
+        // if ((homePage === "on-homepage") || isPrevBtnHomebtn === "hide") {
+        //     jQuery(".home-button").hide();
+        //     jQuery(".prev-button").hide();
+        // }
+        // //unhiding the home and the prev button if we are not on the homepage.
+        // jQuery(".next-button").click(function () {
+        //     setTimeout(() => {
+        //         jQuery(".home-button").fadeIn();
+        //         jQuery(".prev-button").fadeIn();
+        //     }, 3000);
 
-        })
+        // })
     </script>
 </body>
 

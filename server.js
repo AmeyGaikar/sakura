@@ -5,7 +5,7 @@ import axios from "axios";
 
 const homePageAnime = "https://kitsu.io/api/edge/anime?page%5Blimit%5D=18&page%5Boffset%5D=0";
 
-let trendingAnime = "https://kitsu.io/api/edge/anime?filter[categories]=trending&page%5Blimit%5D=18&page%5Boffset%5D=0";
+let trendingAnime = "https://kitsu.io/api/edge/anime?filter%5Bcategories%5D=trending&page%5Blimit%5D=18&page%5Boffset%5D=18";
 const tokenAccessURL = "https://kitsu.io/api/oauth/token";
 let allAnime = "https://kitsu.io/api/edge/anime?page[limit]=18&page[offset]=0";
 const port = 3000;
@@ -83,49 +83,57 @@ app.get("/homepage", async (req, res) => {
 //when user clicks on the next button this route is triggered.
 app.get("/next", async (req, res) => {
 
-    //here we are getting the response from allAnime varible.
+    res.set('Cache-Control', 'no-store');
+
     try {
-
         let trendingResponse, animeResponse;
-        if (req.query.pgtype == 'trending') {
-            console.log("test ok!");
 
+        if (req.query.pgtype === 'trending') {
+            console.log("Fetching next page for trending anime");
+
+            // Fetch current trending page
             const currentPage = await axios.get(trendingAnime);
-
             trnextLink = currentPage.data.links.next;
 
+            // Fetch the next trending anime page
             trendingResponse = await axios.get(trnextLink);
-            trendingAnime = trnextLink;
+            console.log(trendingResponse.data.data[1].attributes.canonicalTitle);
+            trendingAnime = trnextLink;  // Update trendingAnime to the next link
 
         } else {
-
-        
+            // Fetch current page for regular anime
             const currentPage = await axios.get(allAnime);
-
-            //using the above response to get the next link from next links object 
             nextLink = currentPage.data.links.next;
 
-            //get the response from the next link .
+            // Fetch the next anime page
             animeResponse = await axios.get(nextLink);
-
-            //setting the allAnime variable as next link. So that if the user clicks the next button again it will be redirected to the nextlink of the previously clicked which is now (current) link since we set the allAnime to have the value of nextLink. 
-            allAnime = nextLink;
+            allAnime = nextLink;  // Update allAnime to the next link
         }
 
-        if(!trendingResponse) {
+        // Fetch trending anime again (if it wasn't trending query)
+        if (!trendingResponse) {
             trendingResponse = await axios.get(trendingAnime);
         }
-
-        if(!animeResponse) {
+        
+        // Fetch anime data again (if it wasn't regular query)
+        if (!animeResponse) {
             animeResponse = await axios.get(allAnime);
         }
 
-        res.render("homepage.ejs", {animeData: animeResponse.data.data, trendingAnime: trendingResponse.data.data});
+
+        // Render the response only once
+        res.render("homepage.ejs", {
+            trendingAnime: trendingResponse.data.data,
+            animeData: animeResponse.data.data,
+            homePageCheck: "on-homepage"
+        });
 
     } catch (error) {
         console.error(error.response);
+        console.error(error);
+        res.status(500).send("Error loading data");
     }
-})
+});
 
 app.get("/prev", async (req, res) => {
     //same logic as above but for previous link.
@@ -142,8 +150,6 @@ app.get("/prev", async (req, res) => {
             const response = await axios.get(trprevLink);
             trendingAnime = trprevLink;
 
-            const fetchAllAnime = await axios.get(allAnime);
-            res.render("homepage.ejs", { trendingAnime: response.data.data, animeData: fetchAllAnime.data.data });
 
         } else if (req.query.pgtype === undefined) {
 
@@ -188,6 +194,6 @@ app.get("/last", async (req, res) => {
 
 
 app.listen(port, () => {
-    console.log(`listening on http://localhost:${port}`);
+    console.log(`listening on http://localhost:${port}/homepage`);
 })
 
