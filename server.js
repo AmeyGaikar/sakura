@@ -19,6 +19,7 @@ let nextLink;
 let prevLink;
 let lastLink;
 
+let trfirstLink;
 let trnextLink;
 let trprevLink;
 let trlastLink;
@@ -83,7 +84,6 @@ app.get("/homepage", async (req, res) => {
 //when user clicks on the next button this route is triggered.
 app.get("/next", async (req, res) => {
 
-    res.set('Cache-Control', 'no-store');
 
     try {
         let trendingResponse, animeResponse;
@@ -114,7 +114,7 @@ app.get("/next", async (req, res) => {
         if (!trendingResponse) {
             trendingResponse = await axios.get(trendingAnime);
         }
-        
+
         // Fetch anime data again (if it wasn't regular query)
         if (!animeResponse) {
             animeResponse = await axios.get(allAnime);
@@ -138,39 +138,51 @@ app.get("/next", async (req, res) => {
 app.get("/prev", async (req, res) => {
     //same logic as above but for previous link.
 
+
     try {
 
+        let trendingResponse, animeResponse;
+
         if (req.query.pgtype == 'trending') {
-            console.log("test ok!");
 
             const currentPage = await axios.get(trendingAnime);
 
             trprevLink = currentPage.data.links.prev;
 
-            const response = await axios.get(trprevLink);
+            trendingResponse = await axios.get(trprevLink);
             trendingAnime = trprevLink;
 
-
-        } else if (req.query.pgtype === undefined) {
+        } else {
 
             const currentPage = await axios.get(allAnime);
             prevLink = currentPage.data.links.prev;
 
-            console.log(prevLink);
-
             //here we are implementing logic that when we pressed previous button if we redirect to the homepage then we would want the home and the prevoious button to be hidden
-
             //it says hide if homepage link is equals to the previous link.
-            let btnChk = String(homePageAnime) === String(prevLink) ? "hide" : "unhide";
 
-            const response = await axios.get(prevLink);
+            animeResponse = await axios.get(prevLink);
             allAnime = prevLink;
-
-
-
-            res.render("homepage.ejs", { animeData: response.data.data, isPrevHome: btnChk });
-
         }
+
+        // Fetch trending anime again (if it wasn't trending query)
+        if (!trendingResponse) {
+            trendingResponse = await axios.get(trendingAnime);
+        }
+
+        // Fetch anime data again (if it wasn't regular query)
+        if (!animeResponse) {
+            animeResponse = await axios.get(allAnime);
+        }
+
+        let btnChk = String(homePageAnime) === String(prevLink) ? "hide" : "unhide";
+
+        res.render("homepage.ejs", {
+            animeData: animeResponse.data.data,
+            trendingAnime: trendingResponse.data.data,
+            isPrevHome: btnChk
+        });
+
+
     } catch (error) {
         console.error(error.response);
     }
@@ -178,13 +190,36 @@ app.get("/prev", async (req, res) => {
 
 app.get("/last", async (req, res) => {
     try {
-        const currentPage = await axios.get(allAnime);
-        lastLink = currentPage.data.links.last;
 
-        const response = await axios.get(lastLink);
-        allAnime = lastLink;
+        let trendingResponse, animeResponse;
+        if (req.query.pgtype == 'trending') {
 
-        res.render("homepage.ejs", { animeData: response.data.data });
+            const currentPage = await axios.get(trendingAnime);
+
+            trlastLink = currentPage.data.links.last;
+
+            trendingResponse = await axios.get(trlastLink);
+            trendingAnime = trlastLink;
+        } else {
+            const currentPage = await axios.get(allAnime);
+            lastLink = currentPage.data.links.last;
+
+            animeResponse = await axios.get(lastLink);
+            allAnime = lastLink;
+        }
+
+        if (!trendingResponse) {
+            trendingResponse = await axios.get(trendingAnime);
+        }
+
+        if (!animeResponse) {
+            animeResponse = await axios.get(allAnime);
+        }
+
+        res.render("homepage.ejs", {
+            animeData: animeResponse.data.data,
+            trendingAnime: trendingResponse.data.data
+        });
 
 
     } catch (error) {
