@@ -16,89 +16,107 @@
 
     <hr>
 
- <%# getting anime data from the server in a json format, which we loop over using foreach loop and  %>
-    <h1 class="category-title">Multiple Anime's to start your Journey!! </h1>
-    <div class="grid-layout">
-        <% locals.animeData.forEach(anime=> { %>
-            <div class="anime-post">
-                <img class="anime-img" src="<%= anime.attributes.posterImage.small %>"
-                    alt="<%= anime.attributes.slug + " image" %>">
-                <p>
-                    <%= anime.attributes.canonicalTitle %>
-                </p>
-
-                <%# the rating are in out-of-100 based format we first convert to out-of-10 rating based format and then we convert it to out-of-5 rating based format. %>
-                <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
-                </p>
-                <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
-                </p>
-            </div>
-            <% }) %>
-
-
-    </div>
-
-    <div class="page-no">
-        <button  class="home-button" onclick='window.location.href="/first"'>Home</button>
-        <button class="prev-button" onclick='window.location.href="/prev"'>Prev</button>
-        <button name="hm-anime-next" class="next-button" onclick="window.location.href='/next'">Next</button>
-        <button onclick="window.location.href='/last'">Last</button>
-    </div>
-<hr>
-    <div class="trendingAnime">
-        <h1 class="category-title">Embark on your Joureny with titles loved by millions!</h1>
-
+    <%# getting anime data from the server in a json format, which we loop over using foreach loop and %>
+        <h1 class="category-title">Multiple Anime's to start your Journey!! </h1>
         <div class="grid-layout">
-            <% locals.trendingAnime.forEach(anime=> { %>
+            <% locals.animeData.forEach(anime=> { %>
                 <div class="anime-post">
                     <img class="anime-img" src="<%= anime.attributes.posterImage.small %>"
                         alt="<%= anime.attributes.slug + " image" %>">
-                    <p class="anime-title">
+                    <p>
                         <%= anime.attributes.canonicalTitle %>
                     </p>
-    
-                    <%# the rating are in out-of-100 based format we first convert to out-of-10 rating based format and then we convert it to out-of-5 rating based format. %>
-                    <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
-                    </p>
-                    <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
-                    </p>
+
+                    <%# the rating are in out-of-100 based format we first convert to out-of-10 rating based format and
+                        then we convert it to out-of-5 rating based format. %>
+                        <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
+                        </p>
+                        <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
+                        </p>
                 </div>
                 <% }) %>
+
+
         </div>
 
         <div class="page-no">
-            <button  class="home-button" onclick='window.location.href="/first?pgtype=trending"'>First</button>
-            <button class="prev-button" onclick='window.location.href="/prev?pgtype=trending"'>Prev</button>
-            <button class="next-button" onclick="window.location.href='/next?pgtype=trending'">Next</button>
-            <button onclick="window.location.href='/last?pgtype=trending'">Last</button>
+            <button class="first-button anime-btn" onclick='window.location.href="/first"'>First</button>
+            <button class="prev-button anime-btn" onclick='window.location.href="/prev"'>Prev</button>
+            <button class="next-button" onclick="window.location.href='/next'">Next</button>
+            <button onclick="window.location.href='/last'">Last</button>
         </div>
-    </div>
+        <hr>
+        <div class="trendingAnime">
+            <h1 class="category-title">Embark on your Joureny with titles loved by millions!</h1>
+
+            <div class="grid-layout">
+                <% locals.trendingAnime.forEach(anime=> { %>
+                    <div class="anime-post">
+                        <img class="anime-img" src="<%= anime.attributes.posterImage.small %>"
+                            alt="<%= anime.attributes.slug + " image" %>">
+                        <p class="anime-title">
+                            <%= anime.attributes.canonicalTitle %>
+                        </p>
+
+                        <%# the rating are in out-of-100 based format we first convert to out-of-10 rating based format
+                            and then we convert it to out-of-5 rating based format. %>
+                            <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
+                            </p>
+                            <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
+                            </p>
+                    </div>
+                    <% }) %>
+            </div>
+
+            <div class="page-no">
+                <button class="first-button trend-btn"
+                    onclick='window.location.href="/first?pgtype=trending"'>First</button>
+                <button class="prev-button trend-btn"
+                    onclick='window.location.href="/prev?pgtype=trending"'>Prev</button>
+                <button class="next-button" onclick="window.location.href='/next?pgtype=trending'">Next</button>
+                <button onclick="window.location.href='/last?pgtype=trending'">Last</button>
+            </div>
+        </div>
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
-    <script>
+        <script>
 
-        //creating variables for checking if we are on homepage & if clicking previous button throws us at homepage?
-        var homePage = "<%= locals.homePageCheck %>";
-        var isPrevBtnHomebtn = "<%= locals.isPrevHome %>";
+            //creating variables for checking if we are on homepage & if clicking previous button throws us at homepage?
+            var homePage = "<%= locals.homePageCheck %>";
+            var isPrevBtnHomebtn = "<%= locals.isPrevHome %>";
+            var whichBtnToShw = "<%= locals.whichButtonToShow %>";
 
-        // implementing logic that if we are on homepage or if previous button redirects us to homepage then hide the home and prev button.
-        // if ((homePage === "on-homepage") || isPrevBtnHomebtn === "hide") {
-        //     jQuery(".home-button").hide();
-        //     jQuery(".prev-button").hide();
-        // }
-        // //unhiding the home and the prev button if we are not on the homepage.
-        // jQuery(".next-button").click(function () {
-        //     setTimeout(() => {
-        //         jQuery(".home-button").fadeIn();
-        //         jQuery(".prev-button").fadeIn();
-        //     }, 3000);
+            console.log(whichBtnToShw);
+            // implementing logic that if we are on homepage or if previous button redirects us to homepage then hide the home and prev button.
+            if ((homePage === "on-homepage")) {
+                jQuery(".anime-btn").hide();
+                jQuery(".trend-btn").hide();
+            }
 
-        // })
+            if(whichBtnToShw === 'trend-visible') {
+                jQuery(".anime-btn").hide();
+            }
 
-    </script>
+            if(whichBtnToShw === 'anime-visible') {
+                jQuery(".trend-btn").hide();
+            }
+
+            
+            // jQuery(".next-button").click(function () {
+            //     setTimeout(() => {
+            //         if (whichBtnToShw === 'trend-visible') {
+            //             jQuery(".first-button-trending").fadeIn();
+            //             jQuery(".prev-button-trending").fadeIn();
+            //         }
+            //     }, 3000);
+            // })
+            //unhiding the home and the prev button if we are not on the homepage.
+
+
+        </script>
 </body>
 
 </html>

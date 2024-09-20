@@ -121,7 +121,7 @@ app.get("/next", async (req, res) => {
 
 
     try {
-        let trendingResponse, animeResponse;
+        let trendingResponse, animeResponse, buttonVisibility;
 
         if (req.query.pgtype === 'trending') {
             console.log("Fetching next page for trending anime");
@@ -135,6 +135,7 @@ app.get("/next", async (req, res) => {
             console.log(trendingResponse.data.data[1].attributes.canonicalTitle);
             trendingAnime = trnextLink;  // Update trendingAnime to the next link
 
+            buttonVisibility = 'trend-visible';
         } else {
             // Fetch current page for regular anime
             const currentPage = await axios.get(allAnime);
@@ -143,6 +144,8 @@ app.get("/next", async (req, res) => {
             // Fetch the next anime page
             animeResponse = await axios.get(nextLink);
             allAnime = nextLink;  // Update allAnime to the next link
+
+            buttonVisibility = 'anime-visible';
         }
 
         // Fetch trending anime again (if it wasn't trending query)
@@ -160,7 +163,7 @@ app.get("/next", async (req, res) => {
         res.render("homepage.ejs", {
             trendingAnime: trendingResponse.data.data,
             animeData: animeResponse.data.data,
-            homePageCheck: "on-homepage"
+            whichButtonToShow: buttonVisibility
         });
 
     } catch (error) {
