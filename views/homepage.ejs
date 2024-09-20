@@ -88,7 +88,7 @@
             var homePage = "<%= locals.homePageCheck %>";
             var isPrevBtnHomebtn = "<%= locals.isPrevHome %>";
             var whichBtnToShw = "<%= locals.whichButtonToShow %>";
-
+            var isTrPrevBtnHomebtn ="<%= locals.isTrPrevHome %>"
             console.log(whichBtnToShw);
             // implementing logic that if we are on homepage or if previous button redirects us to homepage then hide the home and prev button.
             if ((homePage === "on-homepage")) {
@@ -96,15 +96,23 @@
                 jQuery(".trend-btn").hide();
             }
 
-            if(whichBtnToShw === 'trend-visible') {
+            if(isPrevBtnHomebtn === "hide") {
+                jQuery(".anime-btn").hide();
+            } 
+
+            if(isTrPrevBtnHomebtn === "hide") {
+                jQuery(".trend-btn").hide();
+            }
+            if(whichBtnToShw === 'trend-visible' ) {
+                jQuery(".trend-btn").show();
                 jQuery(".anime-btn").hide();
             }
 
-            if(whichBtnToShw === 'anime-visible') {
-                jQuery(".trend-btn").hide();
-            }
+            // if(whichBtnToShw === 'anime-visible') {
+            //     jQuery(".trend-btn").hide();
+            // }
 
-            
+ 
             // jQuery(".next-button").click(function () {
             //     setTimeout(() => {
             //         if (whichBtnToShw === 'trend-visible') {

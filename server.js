@@ -4,7 +4,7 @@ import axios, { all } from "axios";
 
 
 const homePageAnime = "https://kitsu.io/api/edge/anime?page%5Blimit%5D=18&page%5Boffset%5D=0";
-
+const homePageTrendingAnime = "https://kitsu.io/api/edge/anime?filter%5Bcategories%5D=trending&page%5Blimit%5D=18&page%5Boffset%5D=18";
 let trendingAnime = "https://kitsu.io/api/edge/anime?filter%5Bcategories%5D=trending&page%5Blimit%5D=18&page%5Boffset%5D=18";
 const tokenAccessURL = "https://kitsu.io/api/oauth/token";
 let allAnime = "https://kitsu.io/api/edge/anime?page[limit]=18&page[offset]=0";
@@ -75,7 +75,7 @@ app.get("/homepage", async (req, res) => {
     } catch (error) {
         console.error(error.response);
     }
- 
+
     // } else {
     //     res.send("<p>you're trying to access the homepage without logging in through kitsu, login using kitsu first.</p>");
     // }
@@ -163,7 +163,7 @@ app.get("/next", async (req, res) => {
         res.render("homepage.ejs", {
             trendingAnime: trendingResponse.data.data,
             animeData: animeResponse.data.data,
-            whichButtonToShow: buttonVisibility
+            whichButtonToShow: buttonVisibility,
         });
 
     } catch (error) {
@@ -176,10 +176,9 @@ app.get("/next", async (req, res) => {
 app.get("/prev", async (req, res) => {
     //same logic as above but for previous link.
 
-
     try {
 
-        let trendingResponse, animeResponse;
+        let trendingResponse, animeResponse, trBtnChk;
 
         if (req.query.pgtype == 'trending') {
 
@@ -212,12 +211,14 @@ app.get("/prev", async (req, res) => {
             animeResponse = await axios.get(allAnime);
         }
 
-        let btnChk = String(homePageAnime) === String(prevLink) ? "hide" : "unhide";
+        let btnChk = homePageAnime === prevLink ? "hide" : "unhide";
+        trBtnChk = homePageTrendingAnime === trprevLink ? "hide" : "unhide";
 
         res.render("homepage.ejs", {
             animeData: animeResponse.data.data,
             trendingAnime: trendingResponse.data.data,
-            isPrevHome: btnChk
+            isPrevHome: btnChk,
+            isTrPrevHome: trBtnChk
         });
 
 
