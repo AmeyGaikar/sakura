@@ -4,26 +4,18 @@ import axios, { all } from "axios";
 
 
 const homePageAnime = "https://kitsu.io/api/edge/anime?page%5Blimit%5D=18&page%5Boffset%5D=0";
-const homePageTrendingAnime = "https://kitsu.io/api/edge/anime?filter%5Bcategories%5D=trending&page%5Blimit%5D=18&page%5Boffset%5D=18";
+const homePageTrendingAnime = "https://kitsu.io/api/edge/anime?filter%5Bcategories%5D=trending&page%5Blimit%5D=18&page%5Boffset%5D=0";
 let trendingAnime = "https://kitsu.io/api/edge/anime?filter%5Bcategories%5D=trending&page%5Blimit%5D=18&page%5Boffset%5D=18";
-const tokenAccessURL = "https://kitsu.io/api/oauth/token";
 let allAnime = "https://kitsu.io/api/edge/anime?page[limit]=18&page[offset]=0";
+
+const tokenAccessURL = "https://kitsu.io/api/oauth/token";
 const port = 3000;
 const app = express();
 
-let trendingResponse;
 let token;
 let userEmail;
 let userPassword;
-let firstLink;
-let nextLink;
-let prevLink;
-let lastLink;
 
-let trfirstLink;
-let trnextLink;
-let trprevLink;
-let trlastLink;
 app.use(express.static("./public"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -59,7 +51,7 @@ app.post("/submitKitsu", async (req, res) => {
 })
 
 //this route gets the anime and sends the data to ejs
-app.get("/homepage", async (req, res) => {
+app.get("/home", async (req, res) => {
 
     //implementing logic for if when th user enters incorrect credentials we can restrict it's access from /homepage route.
 
@@ -68,9 +60,14 @@ app.get("/homepage", async (req, res) => {
     // if ((userEmail && userPassword) && token) {
     try {
         const response = await axios.get(homePageAnime);
-        const fetchTrending = await axios.get(trendingAnime);
+        const fetchTrending = await axios.get(homePageTrendingAnime);
+        const typeOfReq = req.body.reqtype;
 
-        res.render("homepage.ejs", { animeData: response.data.data, trendingAnime: fetchTrending.data.data, homePageCheck: "on-homepage" });
+        res.render("homepage.ejs", { animeData: response.data.data, 
+            trendingAnime: fetchTrending.data.data, homePageChk: "on-homepage",
+            isAnimePrevHome: 'unhide',
+            homeRequestedby: typeOfReq
+            });
 
     } catch (error) {
         console.error(error.response);
@@ -81,193 +78,168 @@ app.get("/homepage", async (req, res) => {
     // }
 })
 
-app.get("/first", async (req, res) => {
+app.post("/prev", async (req, res) => {
+
+    const typeOfReq = req.body.reqtype;
+
+    let randomAnimeRes, trendingAnimeRes, rdPrevLink, trPrevLink;
+
     try {
-        let trendingResponse, animeResponse;
+        if (typeOfReq === "randomAnime") {
+            const response = await axios.get(allAnime);
+            rdPrevLink = response.data.links.prev;
+            randomAnimeRes = await axios.get(rdPrevLink);
 
-        if (req.query.pgtype == 'trending') {
-            const curretPage = await axios.get(trendingAnime);
-            trfirstLink = curretPage.data.links.first;
-
-            trendingResponse = await axios.get(trfirstLink);
-            trendingAnime = trfirstLink;
+            allAnime = rdPrevLink;
         } else {
-            const currentPage = await axios.get(allAnime);
-
-            firstLink = currentPage.data.links.first;
-            animeResponse = await axios.get(firstLink);
-
-            allAnime = firstLink;
+            const response = await axios.get(trendingAnime);
+            trPrevLink = response.data.links.prev;
+            
+            trendingAnimeRes = await axios.get(trPrevLink);
+            trendingAnime = trPrevLink 
         }
 
-        if (!trendingResponse) {
-            trendingResponse = await axios.get(trendingAnime);
+
+        if(!randomAnimeRes) {
+            randomAnimeRes = await axios.get(allAnime);
         }
 
-        if (!animeResponse) {
-            animeResponse = await axios.get(allAnime);
+        if(!trendingAnimeRes) {
+            trendingAnimeRes = await axios.get(trendingAnime);
         }
 
-        res.render("homepage.ejs", {
-            animeData: animeResponse.data.data,
-            trendingAnime: trendingResponse.data.data
-        })
+        res.render("homepage.ejs", { animeData: randomAnimeRes.data.data,
+            trendingAnime: trendingAnimeRes.data.data,
+            isAnimePrevHome: rdPrevLink === homePageAnime ? 'hide' : 'unhide',
+            isTrendAnimePrevHome: trPrevLink === homePageTrendingAnime ? 'hide' : 'unhide'
+        });
     } catch (error) {
         console.error(error.response);
     }
+
 })
 //when user clicks on the next button this route is triggered.
-app.get("/next", async (req, res) => {
+app.post("/next", async (req, res) => {
+    const typeOfReq = req.body.reqtype;
 
-
+    let randomAnimeRes, trendingAnimeRes, rdNextLink, trNextLink, whichAnimeBtn;
     try {
-        let trendingResponse, animeResponse, buttonVisibility;
+        if (typeOfReq === "randomAnime") {
+            const response = await axios.get(allAnime);
+            rdNextLink = response.data.links.next;
+            randomAnimeRes = await axios.get(rdNextLink);
 
-        if (req.query.pgtype === 'trending') {
-            console.log("Fetching next page for trending anime");
-
-            // Fetch current trending page
-            const currentPage = await axios.get(trendingAnime);
-            trnextLink = currentPage.data.links.next;
-
-            // Fetch the next trending anime page
-            trendingResponse = await axios.get(trnextLink);
-            console.log(trendingResponse.data.data[1].attributes.canonicalTitle);
-            trendingAnime = trnextLink;  // Update trendingAnime to the next link
-
-            buttonVisibility = 'trend-visible';
+            whichAnimeBtn = "anime"
+            allAnime = rdNextLink;
         } else {
-            // Fetch current page for regular anime
-            const currentPage = await axios.get(allAnime);
-            nextLink = currentPage.data.links.next;
-
-            // Fetch the next anime page
-            animeResponse = await axios.get(nextLink);
-            allAnime = nextLink;  // Update allAnime to the next link
-
-            buttonVisibility = 'anime-visible';
-        }
-
-        // Fetch trending anime again (if it wasn't trending query)
-        if (!trendingResponse) {
-            trendingResponse = await axios.get(trendingAnime);
-        }
-
-        // Fetch anime data again (if it wasn't regular query)
-        if (!animeResponse) {
-            animeResponse = await axios.get(allAnime);
+            const response = await axios.get(trendingAnime);
+            trNextLink = response.data.links.next;
+            
+            whichAnimeBtn = "trend"
+            trendingAnimeRes = await axios.get(trNextLink);
+            trendingAnime = trNextLink 
         }
 
 
-        // Render the response only once
-        res.render("homepage.ejs", {
-            trendingAnime: trendingResponse.data.data,
-            animeData: animeResponse.data.data,
-            whichButtonToShow: buttonVisibility,
+        if(!randomAnimeRes) {
+            randomAnimeRes = await axios.get(allAnime);
+        }
+
+        if(!trendingAnimeRes) {
+            trendingAnimeRes = await axios.get(trendingAnime);
+        }
+
+        res.render("homepage.ejs", { animeData: randomAnimeRes.data.data,
+            trendingAnime: trendingAnimeRes.data.data,
+            isAnimePrevHome: 'unhide',
+            whichBtnWasClicked: whichAnimeBtn
         });
-
     } catch (error) {
         console.error(error.response);
-        console.error(error);
-        res.status(500).send("Error loading data");
     }
+
 });
 
-app.get("/prev", async (req, res) => {
-    //same logic as above but for previous link.
+app.post("/first", async (req, res) => {
+    //same logic as above but for previous link
+    const typeOfReq = req.body.reqtype;
 
+    let randomAnimeRes, trendingAnimeRes, rdFirstLink, trFirstLink;
     try {
+        if (typeOfReq === "randomAnime") {
+            const response = await axios.get(allAnime);
+            rdFirstLink = response.data.links.first;
+            randomAnimeRes = await axios.get(rdFirstLink);
 
-        let trendingResponse, animeResponse, trBtnChk;
-
-        if (req.query.pgtype == 'trending') {
-
-            const currentPage = await axios.get(trendingAnime);
-
-            trprevLink = currentPage.data.links.prev;
-
-            trendingResponse = await axios.get(trprevLink);
-            trendingAnime = trprevLink;
-
+            allAnime = rdFirstLink;
         } else {
-
-            const currentPage = await axios.get(allAnime);
-            prevLink = currentPage.data.links.prev;
-
-            //here we are implementing logic that when we pressed previous button if we redirect to the homepage then we would want the home and the prevoious button to be hidden
-            //it says hide if homepage link is equals to the previous link.
-
-            animeResponse = await axios.get(prevLink);
-            allAnime = prevLink;
+            const response = await axios.get(trendingAnime);
+            trFirstLink = response.data.links.first;
+            
+            trendingAnimeRes = await axios.get(trFirstLink);
+            trendingAnime = trFirstLink 
         }
 
-        // Fetch trending anime again (if it wasn't trending query)
-        if (!trendingResponse) {
-            trendingResponse = await axios.get(trendingAnime);
+
+        if(!randomAnimeRes) {
+            randomAnimeRes = await axios.get(allAnime);
         }
 
-        // Fetch anime data again (if it wasn't regular query)
-        if (!animeResponse) {
-            animeResponse = await axios.get(allAnime);
+        if(!trendingAnimeRes) {
+            trendingAnimeRes = await axios.get(trendingAnime);
         }
 
-        let btnChk = homePageAnime === prevLink ? "hide" : "unhide";
-        trBtnChk = homePageTrendingAnime === trprevLink ? "hide" : "unhide";
-
-        res.render("homepage.ejs", {
-            animeData: animeResponse.data.data,
-            trendingAnime: trendingResponse.data.data,
-            isPrevHome: btnChk,
-            isTrPrevHome: trBtnChk
+        res.render("homepage.ejs", { animeData: randomAnimeRes.data.data,
+            trendingAnime: trendingAnimeRes.data.data,
+            onFirstPage: "yes",
+            isAnimePrevHome: 'unhide'
         });
-
-
     } catch (error) {
         console.error(error.response);
     }
+
+
 })
 
-app.get("/last", async (req, res) => {
+app.post("/last", async (req, res) => {
+    const typeOfReq = req.body.reqtype;
+
+    let randomAnimeRes, trendingAnimeRes, rdLastLink, trLastLink;
     try {
+        if (typeOfReq === "randomAnime") {
+            const response = await axios.get(allAnime);
+            rdLastLink = response.data.links.last;
+            randomAnimeRes = await axios.get(rdLastLink);
 
-        let trendingResponse, animeResponse;
-        if (req.query.pgtype == 'trending') {
-
-            const currentPage = await axios.get(trendingAnime);
-
-            trlastLink = currentPage.data.links.last;
-
-            trendingResponse = await axios.get(trlastLink);
-            trendingAnime = trlastLink;
+            allAnime = rdLastLink;
         } else {
-            const currentPage = await axios.get(allAnime);
-            lastLink = currentPage.data.links.last;
-
-            animeResponse = await axios.get(lastLink);
-            allAnime = lastLink;
+            const response = await axios.get(trendingAnime);
+            trLastLink = response.data.links.last;
+            
+            trendingAnimeRes = await axios.get(trFirstLink);
+            trendingAnime = trFirstLink 
         }
 
-        if (!trendingResponse) {
-            trendingResponse = await axios.get(trendingAnime);
+
+        if(!randomAnimeRes) {
+            randomAnimeRes = await axios.get(allAnime);
         }
 
-        if (!animeResponse) {
-            animeResponse = await axios.get(allAnime);
+        if(!trendingAnimeRes) {
+            trendingAnimeRes = await axios.get(trendingAnime);
         }
 
-        res.render("homepage.ejs", {
-            animeData: animeResponse.data.data,
-            trendingAnime: trendingResponse.data.data
+        res.render("homepage.ejs", { animeData: randomAnimeRes.data.data,
+            trendingAnime: trendingAnimeRes.data.data,
+            isAnimePrevHome: 'unhide'
         });
-
-
     } catch (error) {
         console.error(error.response);
     }
-})
 
+})
 
 app.listen(port, () => {
-    console.log(`listening on http://localhost:${port}/homepage`);
+    console.log(`listening on http://localhost:${port}/home`);
 })
 

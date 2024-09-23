@@ -40,10 +40,26 @@
         </div>
 
         <div class="page-no">
-            <button class="first-button anime-btn" onclick='window.location.href="/first"'>First</button>
-            <button class="prev-button anime-btn" onclick='window.location.href="/prev"'>Prev</button>
-            <button class="next-button" onclick="window.location.href='/next'">Next</button>
-            <button onclick="window.location.href='/last'">Last</button>
+            <form action="/first">
+                <input type="hidden" name="reqtype" value="randomAnime">
+                <button class="anime-btn-first" onclick='window.location.href="/first"'>First</button>
+            </form>
+
+            <form action="/next" method="post">
+                <input type="hidden" name="reqtype" value="randomAnime">
+                <button class="anime-btn-next" onclick="window.location.href='/next'">Next</button>
+            </form>
+
+            <form action="/prev">
+                <input type="hidden" name="reqtype" value="randomAnime">
+                <button class="anime-btn-prev" onclick='window.location.href="/prev"'>Prev</button>
+            </form>
+
+
+            <form action="/last">
+                <input type="hidden" name="reqtype" value="randomAnime">
+                <button class="anime-btn-last" onclick="window.location.href='/last'">Last</button>
+            </form>
         </div>
         <hr>
         <div class="trendingAnime">
@@ -69,12 +85,26 @@
             </div>
 
             <div class="page-no">
-                <button class="first-button trend-btn"
-                    onclick='window.location.href="/first?pgtype=trending"'>First</button>
-                <button class="prev-button trend-btn"
-                    onclick='window.location.href="/prev?pgtype=trending"'>Prev</button>
-                <button class="next-button" onclick="window.location.href='/next?pgtype=trending'">Next</button>
-                <button onclick="window.location.href='/last?pgtype=trending'">Last</button>
+                <form action="/first" method="post">
+                    <input type="hidden" name="reqtype" value="trendingAnime">
+                    <button class="trend-btn-first">First</button>
+                </form>
+
+                <form action="/prev" method="post">
+                    <input type="hidden" name="reqtype" value="trendingAnime">
+                    <button class="trend-btn-prev">Prev</button>
+                </form>
+
+                <form action="/next" method="post">
+                    <input type="hidden" name="reqtype" value="trendingAnime">
+                    <button class="trend-btn-next">Next</button>
+                </form>
+
+                <form action="/last" method="post">
+                    <input type="hidden" name="reqtype" value="trendingAnime">
+                    <button class="trend-btn-last">Last</button>
+                </form>
+
             </div>
         </div>
 
@@ -88,40 +118,55 @@
             var homePage = "<%= locals.homePageCheck %>";
             var isPrevBtnHomebtn = "<%= locals.isPrevHome %>";
             var whichBtnToShw = "<%= locals.whichButtonToShow %>";
-            var isTrPrevBtnHomebtn ="<%= locals.isTrPrevHome %>"
+            var isTrPrevBtnHomebtn = "<%= locals.isTrPrevHome %>"
             console.log(whichBtnToShw);
             // implementing logic that if we are on homepage or if previous button redirects us to homepage then hide the home and prev button.
-            if ((homePage === "on-homepage")) {
-                jQuery(".anime-btn").hide();
-                jQuery(".trend-btn").hide();
+
+
+            var animeSession = sessionStorage.getItem("anime-clicked");
+            var trendingSession = sessionStorage.getItem("trending-clicked");
+
+            jQuery(document).ready(function () {
+
+
+                //   jQuery(".trend-btn-first").hide();
+                //     jQuery(".trend-btn-prev").hide();
+                if (animeSession === "anime") {
+                    jQuery(".anime-btn-first, .anime-btn-prev").show();
+                } else {
+                    jQuery(".anime-btn-first").hide();
+                    jQuery(".anime-btn-prev").hide();
+                }
+
+
+                if (trendingSession === "trending") {
+                    jQuery(".trend-btn-first, .trend-btn-prev").show();
+                } else {
+                    jQuery(".trend-btn-first").hide();
+                    jQuery(".trend-btn-prev").hide();
+                }
+
+                jQuery(".anime-btn-next").click(function () {
+                    sessionStorage.setItem("anime-clicked", "anime");
+                })
+
+                jQuery(".trend-btn-next").click(function () {
+                    sessionStorage.setItem("trending-clicked", "trending");
+                })
+
+                jQuery(".trend-btn-first").click(function () {
+                    sessionStorage.setItem("trending-clicked", null);
+                })
+
+                jQuery(".anime-btn-first").click(function () {
+                    sessionStorage.setItem("anime-clicked", null);
+                })
             }
+            )
 
-            if(isPrevBtnHomebtn === "hide") {
-                jQuery(".anime-btn").hide();
-            } 
 
-            if(isTrPrevBtnHomebtn === "hide") {
-                jQuery(".trend-btn").hide();
-            }
-            if(whichBtnToShw === 'trend-visible' ) {
-                jQuery(".trend-btn").show();
-                jQuery(".anime-btn").hide();
-            }
 
-            // if(whichBtnToShw === 'anime-visible') {
-            //     jQuery(".trend-btn").hide();
-            // }
 
- 
-            // jQuery(".next-button").click(function () {
-            //     setTimeout(() => {
-            //         if (whichBtnToShw === 'trend-visible') {
-            //             jQuery(".first-button-trending").fadeIn();
-            //             jQuery(".prev-button-trending").fadeIn();
-            //         }
-            //     }, 3000);
-            // })
-            //unhiding the home and the prev button if we are not on the homepage.
 
 
         </script>
