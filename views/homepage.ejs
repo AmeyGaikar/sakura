@@ -40,9 +40,9 @@
         </div>
 
         <div class="page-no">
-            <form action="/first">
+            <form action="/first" method="post">
                 <input type="hidden" name="reqtype" value="randomAnime">
-                <button class="anime-btn-first" onclick='window.location.href="/first"'>First</button>
+                <button class="anime-btn-first">First</button>
             </form>
 
             <form action="/next" method="post">
@@ -50,7 +50,7 @@
                 <button class="anime-btn-next" onclick="window.location.href='/next'">Next</button>
             </form>
 
-            <form action="/prev">
+            <form action="/prev" method="post">
                 <input type="hidden" name="reqtype" value="randomAnime">
                 <button class="anime-btn-prev" onclick='window.location.href="/prev"'>Prev</button>
             </form>
@@ -84,7 +84,7 @@
                     <% }) %>
             </div>
 
-            <div class="page-no">
+            <div class="trending-btn">
                 <form action="/first" method="post">
                     <input type="hidden" name="reqtype" value="trendingAnime">
                     <button class="trend-btn-first">First</button>
@@ -113,61 +113,42 @@
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
         <script>
+             jQuery(document).ready(function () {
+        // Retrieve server value indicating whether the user is on the homepage (first page)
+        var isAnimePrevHome = "<%= locals.isAnimePrevHome %>";
+        var animeSession = sessionStorage.getItem("anime-clicked");
 
-            //creating variables for checking if we are on homepage & if clicking previous button throws us at homepage?
-            var homePage = "<%= locals.homePageCheck %>";
-            var isPrevBtnHomebtn = "<%= locals.isPrevHome %>";
-            var whichBtnToShw = "<%= locals.whichButtonToShow %>";
-            var isTrPrevBtnHomebtn = "<%= locals.isTrPrevHome %>"
-            console.log(whichBtnToShw);
-            // implementing logic that if we are on homepage or if previous button redirects us to homepage then hide the home and prev button.
+        console.log('isAnimePrevHome:', isAnimePrevHome);
 
+        // Logic to show/hide buttons
+        if (isAnimePrevHome === "hide") {
+            // If we're on the homepage via Prev, hide the buttons
+            jQuery(".anime-btn-first, .anime-btn-prev").hide();
+        } else if (animeSession === "anime") {
+            // If user clicked "Next", show buttons
+            jQuery(".anime-btn-first, .anime-btn-prev").show();
+        } else if (animeSession === null) {
+            // If we're back on the homepage
+            jQuery(".anime-btn-first, .anime-btn-prev").hide();
+        } else {
+            // Otherwise, keep buttons visible
+            jQuery(".anime-btn-first, .anime-btn-prev").show();
+        }
 
-            var animeSession = sessionStorage.getItem("anime-clicked");
-            var trendingSession = sessionStorage.getItem("trending-clicked");
+        // Update sessionStorage when buttons are clicked
+        jQuery(".anime-btn-next").click(function () {
+            sessionStorage.setItem("anime-clicked", "anime"); // Set session to 'anime' when clicking Next
+        });
 
-            jQuery(document).ready(function () {
+        jQuery(".anime-btn-prev").click(function () {
+            sessionStorage.setItem("anime-clicked", null); // Set session to 'null' when clicking Prev
+        });
 
-
-                //   jQuery(".trend-btn-first").hide();
-                //     jQuery(".trend-btn-prev").hide();
-                if (animeSession === "anime") {
-                    jQuery(".anime-btn-first, .anime-btn-prev").show();
-                } else {
-                    jQuery(".anime-btn-first").hide();
-                    jQuery(".anime-btn-prev").hide();
-                }
-
-
-                if (trendingSession === "trending") {
-                    jQuery(".trend-btn-first, .trend-btn-prev").show();
-                } else {
-                    jQuery(".trend-btn-first").hide();
-                    jQuery(".trend-btn-prev").hide();
-                }
-
-                jQuery(".anime-btn-next").click(function () {
-                    sessionStorage.setItem("anime-clicked", "anime");
-                })
-
-                jQuery(".trend-btn-next").click(function () {
-                    sessionStorage.setItem("trending-clicked", "trending");
-                })
-
-                jQuery(".trend-btn-first").click(function () {
-                    sessionStorage.setItem("trending-clicked", null);
-                })
-
-                jQuery(".anime-btn-first").click(function () {
-                    sessionStorage.setItem("anime-clicked", null);
-                })
-            }
-            )
-
-
-
-
-
+        jQuery(".anime-btn-first").click(function () {
+            sessionStorage.removeItem("anime-clicked"); // Clear session when clicking First
+        });
+    });
+             
 
         </script>
 </body>

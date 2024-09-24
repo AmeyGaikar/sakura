@@ -63,11 +63,12 @@ app.get("/home", async (req, res) => {
         const fetchTrending = await axios.get(homePageTrendingAnime);
         const typeOfReq = req.body.reqtype;
 
-        res.render("homepage.ejs", { animeData: response.data.data, 
+
+        res.render("homepage.ejs", {
+            animeData: response.data.data,
             trendingAnime: fetchTrending.data.data, homePageChk: "on-homepage",
-            isAnimePrevHome: 'unhide',
             homeRequestedby: typeOfReq
-            });
+        });
 
     } catch (error) {
         console.error(error.response);
@@ -79,45 +80,46 @@ app.get("/home", async (req, res) => {
 })
 
 app.post("/prev", async (req, res) => {
-
     const typeOfReq = req.body.reqtype;
-
-    let randomAnimeRes, trendingAnimeRes, rdPrevLink, trPrevLink;
+    let randomAnimeRes, trendingAnimeRes, rdPrevLink, trPrevLink, animePrevChk = 'unhide';
 
     try {
         if (typeOfReq === "randomAnime") {
             const response = await axios.get(allAnime);
             rdPrevLink = response.data.links.prev;
             randomAnimeRes = await axios.get(rdPrevLink);
-
             allAnime = rdPrevLink;
+            
+            // If the previous link is homePageAnime, set the flag to hide buttons
+            if (rdPrevLink === homePageAnime) {
+                animePrevChk = "hide";
+            }
         } else {
             const response = await axios.get(trendingAnime);
             trPrevLink = response.data.links.prev;
-            
             trendingAnimeRes = await axios.get(trPrevLink);
-            trendingAnime = trPrevLink 
+            trendingAnime = trPrevLink;
         }
 
-
-        if(!randomAnimeRes) {
+        if (!randomAnimeRes) {
             randomAnimeRes = await axios.get(allAnime);
         }
 
-        if(!trendingAnimeRes) {
+        if (!trendingAnimeRes) {
             trendingAnimeRes = await axios.get(trendingAnime);
         }
 
-        res.render("homepage.ejs", { animeData: randomAnimeRes.data.data,
+        // Pass the flag to the template
+        res.render("homepage.ejs", { 
+            animeData: randomAnimeRes.data.data,
             trendingAnime: trendingAnimeRes.data.data,
-            isAnimePrevHome: rdPrevLink === homePageAnime ? 'hide' : 'unhide',
-            isTrendAnimePrevHome: trPrevLink === homePageTrendingAnime ? 'hide' : 'unhide'
+            isAnimePrevHome: animePrevChk // Send the flag for anime section
         });
     } catch (error) {
         console.error(error.response);
     }
+});
 
-})
 //when user clicks on the next button this route is triggered.
 app.post("/next", async (req, res) => {
     const typeOfReq = req.body.reqtype;
@@ -134,24 +136,24 @@ app.post("/next", async (req, res) => {
         } else {
             const response = await axios.get(trendingAnime);
             trNextLink = response.data.links.next;
-            
+
             whichAnimeBtn = "trend"
             trendingAnimeRes = await axios.get(trNextLink);
-            trendingAnime = trNextLink 
+            trendingAnime = trNextLink
         }
 
 
-        if(!randomAnimeRes) {
+        if (!randomAnimeRes) {
             randomAnimeRes = await axios.get(allAnime);
         }
 
-        if(!trendingAnimeRes) {
+        if (!trendingAnimeRes) {
             trendingAnimeRes = await axios.get(trendingAnime);
         }
 
-        res.render("homepage.ejs", { animeData: randomAnimeRes.data.data,
+        res.render("homepage.ejs", {
+            animeData: randomAnimeRes.data.data,
             trendingAnime: trendingAnimeRes.data.data,
-            isAnimePrevHome: 'unhide',
             whichBtnWasClicked: whichAnimeBtn
         });
     } catch (error) {
@@ -175,24 +177,24 @@ app.post("/first", async (req, res) => {
         } else {
             const response = await axios.get(trendingAnime);
             trFirstLink = response.data.links.first;
-            
+
             trendingAnimeRes = await axios.get(trFirstLink);
-            trendingAnime = trFirstLink 
+            trendingAnime = trFirstLink
         }
 
 
-        if(!randomAnimeRes) {
+        if (!randomAnimeRes) {
             randomAnimeRes = await axios.get(allAnime);
         }
 
-        if(!trendingAnimeRes) {
+        if (!trendingAnimeRes) {
             trendingAnimeRes = await axios.get(trendingAnime);
         }
 
-        res.render("homepage.ejs", { animeData: randomAnimeRes.data.data,
+        res.render("homepage.ejs", {
+            animeData: randomAnimeRes.data.data,
             trendingAnime: trendingAnimeRes.data.data,
             onFirstPage: "yes",
-            isAnimePrevHome: 'unhide'
         });
     } catch (error) {
         console.error(error.response);
@@ -215,23 +217,24 @@ app.post("/last", async (req, res) => {
         } else {
             const response = await axios.get(trendingAnime);
             trLastLink = response.data.links.last;
-            
+
             trendingAnimeRes = await axios.get(trFirstLink);
-            trendingAnime = trFirstLink 
+            trendingAnime = trFirstLink
         }
 
 
-        if(!randomAnimeRes) {
+        if (!randomAnimeRes) {
             randomAnimeRes = await axios.get(allAnime);
         }
 
-        if(!trendingAnimeRes) {
+        if (!trendingAnimeRes) {
             trendingAnimeRes = await axios.get(trendingAnime);
         }
 
-        res.render("homepage.ejs", { animeData: randomAnimeRes.data.data,
+        res.render("homepage.ejs", {
+            animeData: randomAnimeRes.data.data,
             trendingAnime: trendingAnimeRes.data.data,
-            isAnimePrevHome: 'unhide'
+
         });
     } catch (error) {
         console.error(error.response);
