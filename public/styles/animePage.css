@@ -1,0 +1,37 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    background-color: black;
+}
+
+.cover-img {
+    width: 100%;
+    height: auto;
+}
+
+.poster-img {
+    margin: 3rem 0 0 3rem;
+}
+
+.coverImgDiv {
+    position: relative;
+    display: flex;
+    width: 100%;
+    align-items: flex-end;
+}
+
+.title-wrapper {
+    position: absolute;
+    top: 60px;
+    padding: 10px;
+    margin: auto;
+}
+
+.anime-title {
+    color:white;
+    font-size:24px;
+    margin: auto;
+    font-weight: bold;
+}

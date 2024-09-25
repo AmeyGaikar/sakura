@@ -18,7 +18,7 @@ let userPassword;
 
 app.use(express.static("./public"));
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
     res.render("index.ejs");
@@ -89,11 +89,9 @@ app.post("/prev", async (req, res) => {
             rdPrevLink = response.data.links.prev;
             randomAnimeRes = await axios.get(rdPrevLink);
             allAnime = rdPrevLink;
-            
+
             // If the previous link is homePageAnime, set the flag to hide buttons
-            if (rdPrevLink === homePageAnime) {
-                animePrevChk = "hide";
-            }
+
         } else {
             const response = await axios.get(trendingAnime);
             trPrevLink = response.data.links.prev;
@@ -109,8 +107,11 @@ app.post("/prev", async (req, res) => {
             trendingAnimeRes = await axios.get(trendingAnime);
         }
 
+        if (rdPrevLink === homePageAnime) {
+            animePrevChk = "hide";
+        }
         // Pass the flag to the template
-        res.render("homepage.ejs", { 
+        res.render("homepage.ejs", {
             animeData: randomAnimeRes.data.data,
             trendingAnime: trendingAnimeRes.data.data,
             isAnimePrevHome: animePrevChk // Send the flag for anime section
@@ -240,6 +241,22 @@ app.post("/last", async (req, res) => {
         console.error(error.response);
     }
 
+})
+
+app.post("/anime",async (req, res) => {
+    let animeId = req.body.anime_id;
+    let animeClicked = "https://kitsu.io/api/edge/anime/" + animeId;
+
+    try {
+        const response = await axios.get(animeClicked);
+    
+        console.log(response.data.data.attributes.coverImage);
+        res.render("animePage.ejs", {animeData: response.data.data});
+    } catch (error) {
+        
+    }
+ 
+    
 })
 
 app.listen(port, () => {

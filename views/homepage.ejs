@@ -20,20 +20,25 @@
         <h1 class="category-title">Multiple Anime's to start your Journey!! </h1>
         <div class="grid-layout">
             <% locals.animeData.forEach(anime=> { %>
-                <div class="anime-post">
-                    <img class="anime-img" src="<%= anime.attributes.posterImage.small %>"
-                        alt="<%= anime.attributes.slug + " image" %>">
-                    <p>
-                        <%= anime.attributes.canonicalTitle %>
-                    </p>
+                <form action="/anime" id="animeForm-<%= anime.id %>" method="post">
+                    <input type="hidden" name="anime_id" value="<%= anime.id %>">
+                    <div class="anime-post">
+                        <img class="anime-img" src="<%= anime.attributes.posterImage.small %>"
+                            alt="<%= anime.attributes.slug + " image" %>">
+                        <p>
+                            <%= anime.attributes.canonicalTitle %>
+                        </p>
 
-                    <%# the rating are in out-of-100 based format we first convert to out-of-10 rating based format and
-                        then we convert it to out-of-5 rating based format. %>
-                        <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
-                        </p>
-                        <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
-                        </p>
-                </div>
+                        <%# the rating are in out-of-100 based format we first convert to out-of-10 rating based format
+                            and then we convert it to out-of-5 rating based format. %>
+                            <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
+                            </p>
+                            <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
+                            </p>
+                    </div>
+
+                </form>
+
                 <% }) %>
 
 
@@ -84,7 +89,7 @@
                     <% }) %>
             </div>
 
-            <div class="trending-btn">
+            <div class="page-no">
                 <form action="/first" method="post">
                     <input type="hidden" name="reqtype" value="trendingAnime">
                     <button class="trend-btn-first">First</button>
@@ -113,42 +118,47 @@
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
         <script>
-             jQuery(document).ready(function () {
-        // Retrieve server value indicating whether the user is on the homepage (first page)
-        var isAnimePrevHome = "<%= locals.isAnimePrevHome %>";
-        var animeSession = sessionStorage.getItem("anime-clicked");
+            jQuery(document).ready(function () {
+                // Retrieve server value indicating whether the user is on the homepage (first page)
+                var isAnimePrevHome = "<%= locals.isAnimePrevHome %>";
+                var animeSession = sessionStorage.getItem("anime-clicked");
 
-        console.log('isAnimePrevHome:', isAnimePrevHome);
+                console.log('isAnimePrevHome:', isAnimePrevHome);
 
-        // Logic to show/hide buttons
-        if (isAnimePrevHome === "hide") {
-            // If we're on the homepage via Prev, hide the buttons
-            jQuery(".anime-btn-first, .anime-btn-prev").hide();
-        } else if (animeSession === "anime") {
-            // If user clicked "Next", show buttons
-            jQuery(".anime-btn-first, .anime-btn-prev").show();
-        } else if (animeSession === null) {
-            // If we're back on the homepage
-            jQuery(".anime-btn-first, .anime-btn-prev").hide();
-        } else {
-            // Otherwise, keep buttons visible
-            jQuery(".anime-btn-first, .anime-btn-prev").show();
-        }
+                // Logic to show/hide buttons
+                if (isAnimePrevHome === "hide") {
+                    // If we're on the homepage via Prev, hide the buttons
+                    jQuery(".anime-btn-first, .anime-btn-prev").hide();
+                } else if (animeSession === "anime") {
+                    // If user clicked "Next", show buttons
+                    jQuery(".anime-btn-first, .anime-btn-prev").show();
+                } else if (animeSession === null) {
+                    // If we're back on the homepage
+                    jQuery(".anime-btn-first, .anime-btn-prev").hide();
+                } else {
+                    // Otherwise, keep buttons visible
+                    jQuery(".anime-btn-first, .anime-btn-prev").show();
+                }
 
-        // Update sessionStorage when buttons are clicked
-        jQuery(".anime-btn-next").click(function () {
-            sessionStorage.setItem("anime-clicked", "anime"); // Set session to 'anime' when clicking Next
-        });
+                // Update sessionStorage when buttons are clicked
+                jQuery(".anime-btn-next").click(function () {
+                    sessionStorage.setItem("anime-clicked", "anime"); // Set session to 'anime' when clicking Next
+                });
 
-        jQuery(".anime-btn-prev").click(function () {
-            sessionStorage.setItem("anime-clicked", null); // Set session to 'null' when clicking Prev
-        });
+                // jQuery(".anime-btn-prev").click(function () {
+                //     sessionStorage.setItem("anime-clicked", null); // Set session to 'null' when clicking Prev
+                // });
 
-        jQuery(".anime-btn-first").click(function () {
-            sessionStorage.removeItem("anime-clicked"); // Clear session when clicking First
-        });
-    });
-             
+                jQuery(".anime-btn-first").click(function () {
+                    sessionStorage.removeItem("anime-clicked"); // Clear session when clicking First
+                });
+
+
+                jQuery(".anime-post").click(function () {
+                    jQuery(this).closest('form').submit();
+                })
+            });
+
 
         </script>
 </body>
