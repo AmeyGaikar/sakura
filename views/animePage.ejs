@@ -11,19 +11,49 @@
 <body>
     <div class="top-sn">
         <div class="coverImgDiv">
-            <img class="cover-img" src="<%= locals.animeData.attributes.coverImage.large %> " alt="">
-
+            <% if (locals.animeData.attributes.coverImage) { %>
+                <img class="cover-img" src="<%= locals.animeData.attributes.coverImage.large %> " alt="">
+            <% } else { %>
+                <img class="cover-img" src="images/cropped_resized_image.jpg" alt="anime cover">
+                <% } %>
             <div class="title-wrapper">
-                <p class="anime-title"> <%= locals.animeData.attributes.canonicalTitle %>  </p>
+                <p class="anime-title">
+                    <%= locals.animeData.attributes.canonicalTitle %>
+                </p>
             </div>
 
         </div>
     </div>
 
+    <div class="bottom-sn">
+        <img class="poster-img" src=" <%= locals.animeData.attributes.posterImage.small %> " alt="">
+        <p class="anime-desc">
+            <%= locals.animeData.attributes.description %>
+        </p>
+    </div>
+    <hr>
+    <div class="anime-details">
+        <p>Anime Details:</p>
 
+        <p class="anime-rating"> Rating: <%= (((locals.animeData.attributes.averageRating) / 10) / 2).toFixed(1) %>
+        </p>
 
-    <img class="poster-img" src=" <%= locals.animeData.attributes.posterImage.small %> " alt="">
+        <p> Rated <%= animeData.attributes.ageRating %> for <%= animeData.attributes.ageRatingGuide %>
+        </p>
 
+        <p>Status: <%= animeData.attributes.status %>
+        </p>
+
+        <p>Start date: <%=animeData.attributes.startDate %>
+        </p>
+
+        <p>
+            Total ep: <%= animeData.attributes.episodeCount %>
+        </p>
+
+        <p> End date: <%= animeData.attributes.endDate %>
+        </p>
+    </div>
 </body>
 
 </html>

@@ -1,37 +1,135 @@
+@import url("../fonts/mabry/stylesheet.css");
+
+@font-face {
+    font-family: 'Mabry Pro';
+    src: url('MabryPro-Regular.eot');
+    src: local('Mabry Pro'), local('MabryPro-Regular'),
+        url('MabryPro-Regular.eot?#iefix') format('embedded-opentype'),
+        url('MabryPro-Regular.woff2') format('woff2'),
+        url('MabryPro-Regular.woff') format('woff'),
+        url('MabryPro-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Mabry Pro Lt';
+    src: url('MabryPro-Light.eot');
+    src: local('Mabry Pro Light'), local('MabryPro-Light'),
+        url('MabryPro-Light.eot?#iefix') format('embedded-opentype'),
+        url('MabryPro-Light.woff2') format('woff2'),
+        url('MabryPro-Light.woff') format('woff'),
+        url('MabryPro-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+p {
+    color: white;
+}
+
+/* hr {
+    max-width: 70%;
+    margin-bottom: 1rem;
+} */
+
 html,
 body {
-    height: 100%;
-    margin: 0;
-    box-sizing: border-box;
     background-color: black;
+    min-height: 100%;
 }
 
 .cover-img {
     width: 100%;
     height: auto;
+    display: block;
+    opacity: 0.45;
 }
 
-.poster-img {
+/* .poster-img {
     margin: 3rem 0 0 3rem;
-}
+} */
 
 .coverImgDiv {
-    position: relative;
-    display: flex;
-    width: 100%;
-    align-items: flex-end;
-}
+    display: grid;
 
-.title-wrapper {
-    position: absolute;
-    top: 60px;
-    padding: 10px;
-    margin: auto;
+    &>* {
+        grid-row: 1;
+        grid-column: 1;
+    }
 }
 
 .anime-title {
-    color:white;
-    font-size:24px;
-    margin: auto;
-    font-weight: bold;
+    color: white;
+    font-size: 24px;
+    padding-left: 1rem;
+
+
+    font-family: 'Mabry Pro';
+    src: url('MabryPro-Light.eot');
+    src: local('Mabry Pro Light'), local('MabryPro-Light'),
+        url('MabryPro-Light.eot?#iefix') format('embedded-opentype'),
+        url('MabryPro-Light.woff2') format('woff2'),
+        url('MabryPro-Light.woff') format('woff'),
+        url('MabryPro-Light.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+
+}
+
+.title-wrapper {
+    align-self: flex-end;
+    z-index: 2;
+}
+
+.bottom-sn {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 1rem;
+}
+
+.bottom-sn img {
+    margin: 1rem 0 1rem 1rem;
+}
+
+.bottom-sn p {
+    font-family: Mabry Pro;
+}
+
+.anime-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #1E201E;
+    max-width: fit-content;
+    margin: 1rem auto;
+    padding: 1rem 1rem;
+    border-radius: 25px;
+}
+
+.anime-details p {
+    margin: 10px auto;
+    text-decoration: underline;
+    font-family: Mabry Pro;
+}
+
+
+
+@media (max-width: 806px) {
+    .bottom-sn {
+        flex-direction: column;
+        margin: auto;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bottom-sn p {
+        padding: 0 1rem;
+    }
+
+
 }
