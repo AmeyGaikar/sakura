@@ -72,20 +72,25 @@
 
             <div class="grid-layout">
                 <% locals.trendingAnime.forEach(anime=> { %>
-                    <div class="anime-post">
-                        <img class="anime-img" src="<%= anime.attributes.posterImage.small %>"
-                            alt="<%= anime.attributes.slug + " image" %>">
-                        <p class="anime-title">
-                            <%= anime.attributes.canonicalTitle %>
-                        </p>
+                    <form action="/anime" id="animeForm<%= anime.id %>" method="post">
+                        <input type="hidden" name="anime_id" value="<%= anime.id%>">
 
-                        <%# the rating are in out-of-100 based format we first convert to out-of-10 rating based format
-                            and then we convert it to out-of-5 rating based format. %>
-                            <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
+                        <div class="anime-post">
+                            <img class="anime-img" src="<%= anime.attributes.posterImage.small %>"
+                                alt="<%= anime.attributes.slug + " image" %>">
+                            <p class="anime-title">
+                                <%= anime.attributes.canonicalTitle %>
                             </p>
-                            <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
-                            </p>
-                    </div>
+
+                            <%# the rating are in out-of-100 based format we first convert to out-of-10 rating based
+                                format and then we convert it to out-of-5 rating based format. %>
+                                <p>Rating: <%= (((anime.attributes.averageRating) / 10) / 2).toFixed(1) %>
+                                </p>
+                                <p> Rated <%= anime.attributes.ageRating %> for <%= anime.attributes.ageRatingGuide %>
+                                </p>
+                        </div>
+                    </form>
+
                     <% }) %>
             </div>
 
@@ -121,10 +126,12 @@
             jQuery(document).ready(function () {
                 // Retrieve server value indicating whether the user is on the homepage (first page)
                 var isAnimePrevHome = "<%= locals.isAnimePrevHome %>";
+                var isTrAnimePrevHome = "<%= locals.isTrAnimePrevHome %>";
                 var animeSession = sessionStorage.getItem("anime-clicked");
-
+                var trendSession = sessionStorage.getItem("trend-clicked");
+                
                 console.log('isAnimePrevHome:', isAnimePrevHome);
-
+                console.log('isTrAnimePrevHome', isTrAnimePrevHome);
                 // Logic to show/hide buttons
                 if (isAnimePrevHome === "hide") {
                     // If we're on the homepage via Prev, hide the buttons
@@ -145,9 +152,6 @@
                     sessionStorage.setItem("anime-clicked", "anime"); // Set session to 'anime' when clicking Next
                 });
 
-                // jQuery(".anime-btn-prev").click(function () {
-                //     sessionStorage.setItem("anime-clicked", null); // Set session to 'null' when clicking Prev
-                // });
 
                 jQuery(".anime-btn-first").click(function () {
                     sessionStorage.removeItem("anime-clicked"); // Clear session when clicking First
@@ -157,6 +161,28 @@
                 jQuery(".anime-post").click(function () {
                     jQuery(this).closest('form').submit();
                 })
+
+
+                // trending anime buttons functionality
+
+                if (isTrAnimePrevHome === 'hide') {
+                    jQuery(".trend-btn-first, .trend-btn-prev").hide();
+                } else if (trendSession === "trend") {
+                    jQuery(".trend-btn-first, .trend-btn-prev").show();
+                } else if (trendSession === null) {
+                    jQuery(".trend-btn-first, .trend-btn-prev").hide();
+                } else {
+                    jQuery(".trend-btn-first, .trend-btn-prev").show();
+                }
+
+                // Update sessionStorage for Trending Anime
+                jQuery(".trend-btn-next").click(function () {
+                    sessionStorage.setItem("trend-clicked", "trend");
+                });
+                jQuery(".trend-btn-first").click(function () {
+                    sessionStorage.removeItem("trend-clicked");
+                });
+
             });
 
 

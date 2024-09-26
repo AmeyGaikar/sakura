@@ -4,7 +4,7 @@ import axios, { all } from "axios";
 
 
 const homePageAnime = "https://kitsu.io/api/edge/anime?page%5Blimit%5D=18&page%5Boffset%5D=0";
-const homePageTrendingAnime = "https://kitsu.io/api/edge/anime?filter%5Bcategories%5D=trending&page%5Blimit%5D=18&page%5Boffset%5D=0";
+const homePageTrendingAnime = "https://kitsu.io/api/edge/anime?filter%5Bcategories%5D=trending&page%5Blimit%5D=18&page%5Boffset%5D=18";
 let trendingAnime = "https://kitsu.io/api/edge/anime?filter%5Bcategories%5D=trending&page%5Blimit%5D=18&page%5Boffset%5D=18";
 let allAnime = "https://kitsu.io/api/edge/anime?page[limit]=18&page[offset]=0";
 
@@ -81,7 +81,7 @@ app.get("/home", async (req, res) => {
 
 app.post("/prev", async (req, res) => {
     const typeOfReq = req.body.reqtype;
-    let randomAnimeRes, trendingAnimeRes, rdPrevLink, trPrevLink, animePrevChk = 'unhide';
+    let randomAnimeRes, trendingAnimeRes, rdPrevLink, trPrevLink, animePrevChk = 'unhide', trAnimePrevChk = 'unhide';
 
     try {
         if (typeOfReq === "randomAnime") {
@@ -89,12 +89,12 @@ app.post("/prev", async (req, res) => {
             rdPrevLink = response.data.links.prev;
             randomAnimeRes = await axios.get(rdPrevLink);
             allAnime = rdPrevLink;
-
             // If the previous link is homePageAnime, set the flag to hide buttons
 
         } else {
             const response = await axios.get(trendingAnime);
             trPrevLink = response.data.links.prev;
+            console.log(trPrevLink);
             trendingAnimeRes = await axios.get(trPrevLink);
             trendingAnime = trPrevLink;
         }
@@ -110,11 +110,17 @@ app.post("/prev", async (req, res) => {
         if (rdPrevLink === homePageAnime) {
             animePrevChk = "hide";
         }
+
+        if(trPrevLink === homePageTrendingAnime){
+            trAnimePrevChk = "hide"
+        }
         // Pass the flag to the template
         res.render("homepage.ejs", {
             animeData: randomAnimeRes.data.data,
             trendingAnime: trendingAnimeRes.data.data,
-            isAnimePrevHome: animePrevChk // Send the flag for anime section
+            isAnimePrevHome: animePrevChk,
+            isTrAnimePrevHome: trAnimePrevChk 
+            // Send the flag for anime section
         });
     } catch (error) {
         console.error(error.response);
@@ -201,7 +207,6 @@ app.post("/first", async (req, res) => {
         console.error(error.response);
     }
 
-
 })
 
 app.post("/last", async (req, res) => {
@@ -250,7 +255,6 @@ app.post("/anime",async (req, res) => {
     try {
         const response = await axios.get(animeClicked);
     
-        console.log(response.data.data.attributes.coverImage);
         res.render("animePage.ejs", {animeData: response.data.data});
     } catch (error) {
         
